@@ -1,5 +1,5 @@
 ---
-title: "choonhongsie.github.io"
+title: "Food Waste in Singapore"
 ---
 
 This is a Quarto website.

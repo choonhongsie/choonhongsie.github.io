@@ -1,1 +1,16 @@
 /* css styles */
+#gh-btn {
+  border-radius: 5px;
+  font-size: 12px;
+  background-color: #333;
+}
+.bi-arrow-right {
+  padding-left: 5px;
+}
+.grid {
+  margin: 10px 10%;
+  justify-content: center;
+}
+section.g-col-4 {
+  text-align: center;
+}

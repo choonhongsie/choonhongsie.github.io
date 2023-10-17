@@ -3,18 +3,19 @@ project:
   output-dir: docs
 
 website:
-  title: "choonhongsie.github.io"
+  title: "Food Waste in Singapore"
   navbar:
     left:
       - href: index.qmd
         text: Home
-      - about.qmd
+      - href: about.qmd
+        text: About Me
 
 format:
   html:
     theme: cosmo
     css: styles.css
-    toc: true
+    page-layout: custom
 
 editor: visual
 
