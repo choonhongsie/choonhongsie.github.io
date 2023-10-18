@@ -1,11 +1,29 @@
 ---
-title: "Food Waste in Singapore"
+title: "Let's Reduce Food Waste in Singapore"
 ---
 
-This is a Quarto website.
+```{r import libraries, echo=FALSE, warning=FALSE}
+library(tidyverse)
+library(plotly)
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+waste_stats <- read_csv("Data Sources/Food Waste Statistics.csv")
+```
+```{r,echo=FALSE, warning=FALSE}
+colnames(waste_stats)[4] = "Total Waste Generated"
+food_waste_chart <- ggplot(waste_stats, aes(Year, `Total Waste Generated`,x = ))+
+  geom_point()+
+  geom_area()+
+  ylim(c(0, 1000000)) + 
+  labs(
+    title = "Food Waste Statistics",
+    x = colnames(waste_stats[1]), y = colnames(waste_stats[4])
+    ) +
+  theme(plot.background = element_blank())
+food_waste_chart
 
-```{r}
-1 + 1
+
+ggplotly(food_waste_chart,tooltip = c("x","y")) %>% 
+  layout(yaxis = list(fixedrange=TRUE),
+         xaxis = list(fixedrange=TRUE)) %>% 
+  config(displayModeBar = FALSE)
 ```
