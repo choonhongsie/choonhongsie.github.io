@@ -1,15 +1,15 @@
 ```{=html}
-<section class="grid">
-  <section class="g-col-8">
-    <h1>I'm Sie Choon Hong</h1>
+<section class="container-lg my-10 mx-10">
+  <section class="row">
+    <section class="col-lg-8">
+        <h1>I'm Sie Choon Hong</h1>
     <p>Currently, a year 2 Communications and New Media student.</p>
     <p>During my free time I would do volunteering for MonoFood, a sustainability-related social enterprise funded by NYC, driven to make our environment a greener and better place, while supporting the vulnerable, the elderly and needy.</p>
     <a href="https://github.com/choonhongsie/NM2207-Challenges-and-Code-alongs.git" id="gh-btn" class="btn btn-primary btn-lg" data-bs-toggle="tooltip" title="Go to challenges and code-alongs" target="_blank">Github<i class="bi bi-arrow-right"></i></a>
-  </section>
-  <section class="g-col-4">
-    <img class="rounded-circle" alt="avatar1" src="Images/Choon Hong.jpg" width="250px" height="250px"/>    
+    </section>
+    <section class="col-lg-4" id="profile-ch">
+      <img class="rounded-circle" alt="avatar1" src="Images/Choon Hong.jpg" width="250px" height="250px"/>
+    </section>
   </section>
 </section>
-
-<br>
 ```

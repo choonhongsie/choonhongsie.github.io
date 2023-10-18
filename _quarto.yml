@@ -1,7 +1,7 @@
 project:
   type: website
   output-dir: docs
-
+  
 website:
   title: "Food Waste in Singapore"
   navbar:
@@ -14,7 +14,9 @@ website:
 format:
   html:
     theme: cosmo
-    css: styles.css
+    css: 
+      - styles.css
+      - bootstrap.css
     page-layout: custom
 
 editor: visual

@@ -2,7 +2,7 @@
 title: "Let's Reduce Food Waste in Singapore"
 ---
 
-```{r import libraries, echo=FALSE, warning=FALSE}
+```{r import libraries, echo=FALSE, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(plotly)
 
@@ -11,15 +11,14 @@ waste_stats <- read_csv("Data Sources/Food Waste Statistics.csv")
 ```{r,echo=FALSE, warning=FALSE}
 colnames(waste_stats)[4] = "Total Waste Generated"
 food_waste_chart <- ggplot(waste_stats, aes(Year, `Total Waste Generated`,x = ))+
-  geom_point()+
-  geom_area()+
+  geom_line(colour = "red")+
+  geom_col() +
   ylim(c(0, 1000000)) + 
   labs(
     title = "Food Waste Statistics",
     x = colnames(waste_stats[1]), y = colnames(waste_stats[4])
     ) +
   theme(plot.background = element_blank())
-food_waste_chart
 
 
 ggplotly(food_waste_chart,tooltip = c("x","y")) %>% 
