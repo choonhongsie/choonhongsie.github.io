@@ -6,11 +6,29 @@ title: "Let's Reduce Food Waste in Singapore"
 library(tidyverse)
 library(plotly)
 
-waste_stats <- read_csv("Data Sources/Food Waste Statistics.csv")
+waste_stats <- read_csv("src/data/Food Waste Statistics.csv")
+UNEP_stats <- read_csv("src/data/UNEP Food Waste Statistics.csv")
 ```
+<section class="container-lg my-10 mx-10">
+<section class=row>
+<section class="col-lg-6">
+
+```{r, echo=FALSE, warning=FALSE}
+# starwars %>% select(name, mass) %>% arrange(desc(mass))
+colnames(UNEP_stats)[4] = "Household_estimate"
+
+top_5_countries <- UNEP_stats %>% select(Country, Household_estimate) %>% arrange(desc(Household_estimate)) %>% slice(1:5)
+ 
+additional_row <- UNEP_stats %>% filter(Country == "Singapore") %>% select(Country, Household_estimate)
+
+combined <- bind_rows(top_5_countries, additional_row)
+
+ggplot(combined, aes(reorder(Country, -Household_estimate), Household_estimate)) + geom_col()
+```
+
 ```{r,echo=FALSE, warning=FALSE}
 colnames(waste_stats)[4] = "Total Waste Generated"
-food_waste_chart <- ggplot(waste_stats, aes(Year, `Total Waste Generated`,x = ))+
+food_waste_chart <- ggplot(waste_stats, aes(Year, `Total Waste Generated`))+
   geom_line(colour = "red")+
   geom_col() +
   ylim(c(0, 1000000)) + 
@@ -26,3 +44,9 @@ ggplotly(food_waste_chart,tooltip = c("x","y")) %>%
          xaxis = list(fixedrange=TRUE)) %>% 
   config(displayModeBar = FALSE)
 ```
+
+<section class="col-lg-6">
+Hello. 
+</section>
+</section>
+</section>
