@@ -1,9 +1,39 @@
-/* css styles */
-#gh-btn {
-  border-radius: 5px;
-  font-size: 12px;
-  background-color: #333;
-}
-#profile-ch {
+/* Import Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Arimo&display=swap');
+
+/* Profile Section */
+#profile-ch, .profile-text, #about-me-title, #contact-me-title {
   text-align: center;
 }
+.profile-text-1, .profile-text-3 {
+  font-size: 1.25rem;
+  color: #555;
+  margin: 0;
+}
+.profile-text, #about-me-title, #contact-me-title {
+  font-family: "Poppins";
+  font-weight: 600;
+  color: #000000;
+}
+h1 {
+  color: #259b47;
+}
+.profile-text-2 {
+  font-size: 3rem
+}
+#surname {
+  color: #259b47;
+}
+.btn {
+  border-radius: 2rem;
+}
+.bi-github {
+  padding-right: 7px;
+}
+.rounded-circle {
+  border: 5px solid #259b47;
+}
+
+/* About Me Section */
+  

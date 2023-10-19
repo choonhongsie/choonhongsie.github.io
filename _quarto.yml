@@ -15,8 +15,8 @@ format:
   html:
     theme: cosmo
     css: 
-      - styles.css
-      - bootstrap.css
+      - /css/styles.css
+      - /css/bootstrap.css
     page-layout: custom
 
 editor: visual

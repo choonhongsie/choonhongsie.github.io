@@ -61,8 +61,8 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="bootstrap.css">
+<link rel="stylesheet" href="./css/styles.css">
+<link rel="stylesheet" href="./css/bootstrap.css">
 </head>
 
 <body class="nav-fixed fullcontent">
@@ -106,19 +106,34 @@ ul.task-list li input[type="checkbox"] {
 
 
 <section class="container-lg my-10 mx-10">
-  <section class="row">
-    <section class="col-lg-4" id="profile-ch">
-      <img class="rounded-circle" alt="avatar1" src="src/images/Choon Hong.jpg" width="250px" height="250px">
-    </section>
-    <section class="col-lg-8">
-      <h1>I'm Sie Choon Hong</h1>
-      <p>Currently, a year 2 Communications and New Media student.</p>
-      <p>During my free time I would do volunteering for MonoFood, a sustainability-related social enterprise funded by NYC, driven to make our environment a greener and better place, while supporting the vulnerable, the elderly and needy.</p>
-      <a href="https://github.com/choonhongsie/NM2207-Challenges-and-Code-alongs.git" id="gh-btn" class="btn btn-primary btn-lg" data-bs-toggle="tooltip" title="Go to challenges and code-alongs" target="_blank">Github<i class="bi bi-arrow-right"></i></a>
+    <section id="profile" class="row justify-content-lg-center">
+        <section class="col-lg-auto" id="profile-ch">
+            <img class="rounded-circle" alt="Choon Hong" src="src/images/Choon Hong.jpg" width="250px" height="250px">
+        </section>
+        <section class="profile-text col-lg-auto">
+            <p class="profile-text-1">Hello, I'm</p>
+            <h1 class="profile-text-2"><span id="surname">Sie</span> Choon Hong</h1>
+            <p class="profile-text-3 mb-3">NUS Student</p>
+                 <a class="btn btn-outline-success my-2 mx-2" href="#contact" role="button" target="_blank">Contact Info</a>
+                <a class="btn btn-success" href="https://github.com/choonhongsie/NM2207-Challenges-and-Code-alongs.git'" role="button" target="_blank"><i class="bi bi-github"></i>Github (NM2207 Files)</a>
+        </section>
     </section>
     
-  </section>
-</section>  
+    <section id="about-me" class="row justify-content-center">
+      <h1 id="about-me-title" class="my-5">About Me</h1>
+      <section id="about-me-image" class="col-sm-auto mb-4">
+      <img id="image-2" alt="Choon Hong" src="src/images/CH-2.jpg">
+      </section>
+      <section id="about-me-text" class="col-sm-6">
+    <p class="mx-5">Currently, I'm a Year 2 Communications and New Media student. During my free time I would do volunteering for MonoFood, a sustainability-related social enterprise funded by NYC, driven to make our environment a greener and better place, while supporting the vulnerable, the elderly and needy.</p>
+        </section>
+<section id="contact" class="my-5">
+    <h1 id="contact-me-title" class="my-5">Contact Me</h1>
+</section>
+      
+    </section>
+</section>
+
 
 
 

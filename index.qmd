@@ -15,8 +15,11 @@ UNEP_stats <- read_csv("src/data/UNEP Food Waste Statistics.csv")
 <section class="row">
 
 <section class="col-lg-6">
+
 Write some text here.
+
 </section>
+
 <section class="col-lg-6">
 
 ```{r, echo=FALSE, warning=FALSE}
@@ -35,11 +38,15 @@ combined <- bind_rows(top_5_countries, additional_row)
 ggplot(combined, aes(reorder(Country,Household_estimate), Household_estimate)) + geom_bar(stat = "identity", fill = "#279b48") + geom_text(aes(label=sprintf("%0.1f", round(Household_estimate, digits = 2))), hjust=-0.2, size=3) + coord_flip() + theme(panel.background = element_blank(),
       panel.grid.major = element_blank()) + labs(x = "Countries" , y = "Household Estimate (Tonnes/Year)",caption = "Source: Kaggle - Household Food Waste Estimate of all Countries")
 ```
+
 </section>
 
 <section class="col-lg-6">
+
 Write some text here as well
+
 </section>
+
 <section class="col-lg-6">
 
 ```{r,echo=FALSE, warning=FALSE}
