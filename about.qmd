@@ -29,7 +29,7 @@
     <section id="projects">
         <h1 id="projects-title" class="my-5">Projects</h1>
         <section id="projects-container" class="row justify-content-center">
-            <section class="col-sm-auto">
+            <section class="col-auto projects-section-1">
                 <div class="card border-secondary mb-3" style="max-width: 18rem;">
                   <img src="src/images/Project 1.jpg" class="card-img-top" alt="...">
                 </div>
@@ -43,7 +43,7 @@
                   <img src="src/images/Portfolio.jpg" class="card-img-top" alt="...">
                 </div>
             </section>
-            <section class="col-sm-auto">
+            <section class="col-auto projects-section-1">
                 <div class="card border-secondary mb-3" style="max-width: 18rem;">
                   <img src="src/images/Project 2.png" class="card-img-top" alt="...">
                 </div>
@@ -61,13 +61,13 @@
     <section id="contact">
         <h1 id="contact-me-title" class="my-5">Contact Me</h1>
         <section id="contact-container" class="row justify-content-center">
-            <section id="contact-1" class="col-sm-auto">
-                <i class="bi bi-envelope" style="font-size:1.5rem;"></i>
-                <a href="Choonhongsie@gmail.com">Choonhongsie@gmail.com</a>
+            <section id="contact-1" class="col-auto">
+                <a class="btn btn-outline-success my-2 mx-2" href="Choonhongsie@gmail.com"
+                role="button" target="_blank"><i class="bi bi-envelope" style="font-size:1rem;"></i>Choonhongsie@gmail.com</a>
             </section>
-            <section id="contact-2" class="col-sm-auto">
-                <i class="bi bi-linkedin" style="font-size:1.5rem;"></i>
-                <a href="www.linkedin.com/in/choonhongsie" role="button" target="_blank">@choonhongsie</a>
+            <section id="contact-2" class="col-auto">
+                <a class="btn btn-success my-2 mx-2" href="www.linkedin.com/in/choonhongsie"
+                role="button" target="_blank"><i class="bi bi-linkedin" style="font-size:1rem;"></i>@Choonhongsie</a>
             </section>
         </section>
     </section>
