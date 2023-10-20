@@ -9,7 +9,7 @@
             <h1 class="profile-text-2"><span id="surname">Sie</span> Choon Hong</h1>
             <p class="profile-text-3 mb-3">NUS Student</p>
             <a class="btn btn-outline-success my-2 mx-2" href="#contact" role="button" target="_blank">Contact Info</a>
-            <a class="btn btn-success" href="https://github.com/choonhongsie/NM2207-Challenges-and-Code-alongs.git'"
+            <a class="btn btn-success" href="https://github.com/choonhongsie/NM2207-Challenges-and-Code-alongs.git"
                 role="button" target="_blank"><i class="bi bi-github"></i>Github (NM2207 Files)</a>
         </section>
     </section>
