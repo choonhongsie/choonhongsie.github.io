@@ -62,7 +62,7 @@
         <h1 id="contact-me-title" class="my-5">Contact Me</h1>
         <section id="contact-container" class="row justify-content-center">
             <section id="contact-1" class="col-auto">
-                <a class="btn btn-outline-success my-2 mx-2" href="Choonhongsie@gmail.com"
+                <a class="btn btn-outline-success my-2 mx-2" href="window.location.href='mailto:choonhongsie@email.com'"
                 role="button" target="_blank"><i class="bi bi-envelope" style="font-size:1rem;"></i>Choonhongsie@gmail.com</a>
             </section>
             <section id="contact-2" class="col-auto">
