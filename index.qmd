@@ -1,75 +1,335 @@
 ---
-title: "Food Waste"
+format: html
+include-in-header: javascript.html
 ---
 
+```{=html}
+<section class="image-container">
+
+<img src="src/images/Food Waste Background image.jpg" style="width:100%;height:300px;object-fit:cover;"/>
+
+<h5 class="center-text-bg-img">What are the key drivers of food waste in Singapore and around the world?</h5>
+
+<p class="bottom-right-text-bg-img">Image by <a href="https://www.freepik.com/free-photo/close-up-hand-holding-wooden-board_14351726.htm#query=food%20waste&position=26&from_view=search&track=ais" target="_blank" style="color:white; text-decoration: none;">Freepik</a></p>
+
+</section>
+
+<section class="container" style="width:70%;">
+<h3 class="text-center fw-bold my-4">Introduction</h3>
+<p>According to the United Nations, it is estimated that 1.3 billion tonnes of food are wasted every year worldwide.</p>
+
+<h3 class="text-center fw-bold my-4">What is <mark style="background-color: #3fb619; border-radius:10px; color:white;">Food Waste?</mark></h3>
+<p>According to the <strong>United Nations' Food and Agricultural Organisation (FAO)</strong>,"food waste" refers to the discarding or non-food use of products that are safe and nutritious for human consumption</p>
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+```
 ```{r import libraries, echo=FALSE, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(plotly)
+library("ggchicklet")
+library(scales)
+library(highcharter) 
 
-waste_stats <- read_csv("src/data/Food Waste Statistics.csv")
-UNEP_stats <- read_csv("src/data/UNEP Food Waste Statistics.csv")
+foodWasteData_sg <- read_csv("src/data/Food Waste Statistics.csv")
+foodWasteData <- read_csv("src/data/UNEP Food Waste Statistics.csv")
+
+remove_background_theme <- function() {
+    theme(
+      panel.background = element_blank(),
+      panel.grid.major = element_blank(),
+      axis.ticks = element_blank()
+    )
+}
 ```
 
-<section class="container-lg my-10 mx-10">
+```{r Data Manipulation, echo=FALSE, message=FALSE, warning=FALSE}
+#Create new column for combined estimate in tonnes/year
+foodWasteData <- mutate(foodWasteData, combined_estimate_tonnes_per_year = foodWasteData$`Household estimate (tonnes/year)` + foodWasteData$`Retail estimate (tonnes/year)` + foodWasteData$`Food service estimate (tonnes/year)`)
+foodWasteData <- foodWasteData[, c(1,2,13,3,4,5,6,7,8,9,10,11,12)]
 
-<section class="row">
+# Changing column names to make them lowercase and include underscores for easier reference
+new_col_names <- c("country", "combined_estimate_kpcpy", "combined_estimate_tpy", "household_estimate_kpcpy", "household_estimate_tpy", "retail_estimate_kpcpy", "retail_estimate_tpy", "food_service_estimate_kpcpy", "food_service_estimate_tpy", "estimate_confidence", "m49_code", "region", "source")
+names(foodWasteData) <- new_col_names
 
-<section class="col-lg-6">
+# Get source column 
+dataSources <- foodWasteData %>% select(country, m49_code, source)
+# Remove source column 
+foodWasteData <- foodWasteData[, -13]
 
-Write some text here.
+# Find total global food waste in 2021
+total_foodwaste_2021 <- sum(foodWasteData$combined_estimate_tpy)
+  
+total_foodwaste_2021 <- format(total_foodwaste_2021, big.mark = ",", scientific = FALSE) 
+dataT <- foodWasteData
 
-</section>
+# Subset the dataframe to select the top 10 countries with the highest and lowest combined per-capita food waste
+# order() sort the data in ascending order from the lowest index 
+topCountries <- tail(foodWasteData[order(foodWasteData$combined_estimate_kpcpy), ], 10)
+bottomCountries <- head(foodWasteData[order(foodWasteData$combined_estimate_kpcpy), ], 10)
 
-<section class="col-lg-6">
-
-```{r, echo=FALSE, warning=FALSE}
-# starwars %>% select(name, mass) %>% arrange(desc(mass))
-colnames(UNEP_stats)[4] = "Household_estimate"
-
-top_5_countries <- UNEP_stats %>% select(Country, Household_estimate) %>% arrange(desc(Household_estimate)) %>% slice(1:5)
- 
-additional_row <- UNEP_stats %>% filter(Country == "Singapore") %>% select(Country, Household_estimate)
+# Top 5 countries including Singapore of household estimate tonnes per year
+top_5_countries <- foodWasteData %>% select(country, household_estimate_tpy) %>% arrange(desc(household_estimate_tpy)) %>% slice(1:5)
+additional_row <- foodWasteData %>% filter(country == "Singapore") %>% select(country, household_estimate_tpy)
 
 combined <- bind_rows(top_5_countries, additional_row)
 
-# ggplot(combined, aes(reorder(Country,-Household_estimate), Household_estimate)) + geom_col(fill = "#279b48") + theme(panel.background = element_blank(),
-#       panel.grid.major = element_blank()) + labs(x = "Countries" , y = "Household Estimate (Tonnes/Year)",caption = "Source: Kaggle - Household Food Waste Estimate of all Countries")
+# foodWasteData_sg
+new_col_names_sg <- c("year", "disposed_tonnes", "recycled_tonnes", "generated_tonnes", "recycling_rate_percent")
+names(foodWasteData_sg) <- new_col_names_sg
+```
 
-ggplot(combined, aes(reorder(Country,Household_estimate), Household_estimate)) + geom_bar(stat = "identity", fill = "#279b48") + geom_text(aes(label=sprintf("%0.1f", round(Household_estimate, digits = 2))), hjust=-0.2, size=3) + coord_flip() + theme(panel.background = element_blank(),
-      panel.grid.major = element_blank()) + labs(x = "Countries" , y = "Household Estimate (Tonnes/Year)",caption = "Source: Kaggle - Household Food Waste Estimate of all Countries")
+```{=html}
+<h2 class="text-center fw-bold my-4">Singapore's Food Waste From a Global Perspective</h2>
+<p>Globally, around 17% of total global food production is wasted in households, in the food service and in retail all together (FAO, n.d.).</p>
+```
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
+data(worldgeojson, package = "highcharter")
+
+countries <- foodWasteData %>% select(country, household_estimate_tpy)
+
+highchart() %>% hc_title(text = "Household Food Waste by Countries (tonnes/year)") %>%
+hc_add_series_map(worldgeojson, countries, value = "household_estimate_tpy", joinBy = c("name", "country")) %>% 
+  hc_colorAxis(minColor = "white", maxColor = "#d62023") %>%
+hc_legend(valueDecimals = 0, valueSuffix = "%") %>% 
+hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
+hc_mapNavigation(enabled = TRUE)
+```
+
+```{=html}
+<h2 class="text-center fw-bold my-4">Let's take a closer look...</h2>
+<h3 class="text-center fw-bold my-4">Which Country Generated the most Household Food Waste?</h3>
+
+<section class="row">
+<section class="col-lg-8">
+```
+```{r 5 Countries with Highest Household Food Waste, echo=FALSE, warning=FALSE}
+ggplot(combined, aes(reorder(country, household_estimate_tpy), household_estimate_tpy)) + 
+  geom_chicklet(radius = grid::unit(2, 'mm'), fill = "#d62023") + 
+  coord_flip(clip = "off") + 
+  geom_text(aes(label = format(household_estimate_tpy, big.mark = ",", scientific = FALSE)), hjust = -0.2) + 
+  theme(axis.text.x = element_blank(),
+        plot.margin = margin(r = 120)) + 
+  remove_background_theme() +
+  labs(title = "The 5 Countries with Highest Household Food Waste",
+         x = "" , y = "Household Food Waste (tonnes/year)", caption = "Source: Kaggle - Household Food Waste Estimate of all Countries") 
 ```
 
 </section>
 
-<section class="col-lg-6">
+<section class="col-lg-4">
 
-Write some text here as well
+<p>China and India, the two most populous countries in the world, also produce the most household food waste. In 2021, China produced an estimated 92 million metric tons of household food waste, while India produced 69 million metric tons. This accounts for nearly one-third of the world's total household food waste.</p>
 
 </section>
 
-<section class="col-lg-6">
+<h3 class="text-center fw-bold my-4">
 
-```{r,echo=FALSE, warning=FALSE}
-colnames(waste_stats)[4] = "Total Waste Generated"
-food_waste_chart <- ggplot(waste_stats, aes(Year, `Total Waste Generated`))+
-  geom_line(colour = "red")+
-  ylim(c(0, 1000000)) + 
-  labs(
-    title = "Food Waste in Singapore",
-    x = colnames(waste_stats[1]), y = colnames(waste_stats[4])
-    ) +
-  theme(panel.background = element_blank(),
-      panel.grid.major = element_blank())
+What are the Top 10 and Bottom 10 Countries for Combined per-capita Food Waste?
 
+</h3>
 
-ggplotly(food_waste_chart,tooltip = c("x","y")) %>% 
-  layout(yaxis = list(fixedrange=TRUE),
-         xaxis = list(fixedrange=TRUE)) %>% 
+<section class="row">
+
+<section class="col-lg-8">
+
+```{r Top 10 Countries, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(topCountries, aes(x = reorder(country, combined_estimate_kpcpy), y = combined_estimate_kpcpy)) +
+  geom_chicklet(radius = grid::unit(2, 'mm'), fill = "#d62023") +
+  # geom_bar(stat = "identity", fill = "red", width = 0.7) +
+  geom_text(aes(label = combined_estimate_kpcpy), hjust = 1.8, vjust = 0.5, size = 3, colour = "white", fontface = "bold") +  
+  labs(title = str_wrap("The 10 Countries with Highest Combined Per-Capita Food Waste",width = 40),
+    x = "", y = "Per-Capita Food Waste (kg/year)") +
+  remove_background_theme() +
+  coord_flip() +
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold",margin = margin(b = 20, l= 20, r = 20))) 
+
+```
+
+```{=html}
+</section>
+
+<section class="col-lg-4">The majority of the top 10 countries are situated in Africa and the Middle East, regions characterized by lower levels of socioeconomic development.</section>
+
+<section class="row">
+
+<section class="col-lg-8">
+```
+
+```{r Bottom 10 Countries, echo=FALSE, message=FALSE, warning=FALSE}
+# Show the 10 countries with the lowest combined per-capita food waste
+ggplot(bottomCountries, aes(x = reorder(country, combined_estimate_kpcpy), y = combined_estimate_kpcpy)) +
+  geom_chicklet(radius = grid::unit(2, 'mm'), fill = "#3fb619") +
+  geom_text(aes(label = combined_estimate_kpcpy), hjust = 1.8, vjust = 0.5, size = 3, colour = "white", fontface = "bold") +
+  labs(title = str_wrap("The 10 Countries with Lowest Combined Per-Capita Food Waste", width = 40),
+    x = "", y = "Per-Capita Food Waste (kg/year)") +
+  remove_background_theme() +
+  coord_flip() +
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold",margin = margin(b = 20, l= 20, r = 20))) 
+```
+
+```{=html}
+</section>
+
+<section class="col-lg-4">
+
+The majority of nations exhibiting the lowest food waste per capita are situated in Europe, which is renowned as a highly developed region globally.
+
+</section>
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# Group the data by the 'region' column
+foodWasteData <- foodWasteData %>%
+  group_by(region)
+
+totalSumFoodWasteByRegion <- foodWasteData %>% 
+  summarize(total_combined_estimate_kpcpy = sum(combined_estimate_kpcpy),
+            total_household_estimate_kpcpy = sum(household_estimate_kpcpy),
+            total_retail_estimate_kpcpy = sum(retail_estimate_kpcpy),
+            total_food_service_estimate_kpcpy = sum(food_service_estimate_kpcpy)) 
+
+#Show how different categories of per-capita food waste compare in each region
+totalSumFoodWasteByRegion <- ggplot(totalSumFoodWasteByRegion, aes(x = reorder(region, total_combined_estimate_kpcpy), y = total_combined_estimate_kpcpy, fill = "Combined")) +
+  geom_bar(stat = "identity", fill = "blue", width = 0.7) +
+  geom_col(aes(y = total_household_estimate_kpcpy, fill = "Household"), width = 0.7) +
+  geom_col(aes(y = total_retail_estimate_kpcpy, fill = "Retail"), width = 0.7) +
+  geom_col(aes(y = total_food_service_estimate_kpcpy, fill = "Food Service"), width = 0.7) +
+  labs(title = str_wrap("Relative Proportions of Food Waste Types by Region", width= 40),
+    x = "",
+    y = "Total Per-Capita Food Waste (kg/year)") +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+  scale_fill_manual(
+    values = c("Household" = "#3fb619", "Retail" = "blue", "Food Service" = "orange"),
+    name = "Food Waste Types",
+    labels = c("Retail", "Household", "Food Service")) +
+  guides(fill = guide_legend(title = "Food Waste Types")) +
+  coord_flip() + 
+  theme(legend.position = "top") +
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", margin = margin(t = 20, b = 20, l= 20, r = 20))) +
+  remove_background_theme()
+
+ggplotly(totalSumFoodWasteByRegion,tooltip = c("x","y")) %>%
+  layout(aspectratio = list(x = 1, y = 1)) %>%
+  config(displayModeBar = FALSE)  %>%
+  layout(legend = list(orientation = "h", x = 0, y = 1.1)) %>%
   config(displayModeBar = FALSE)
 ```
 
-</section>
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# Calculate averages for each per-capita food waste column
+averageFoodWasteByRegion <- foodWasteData %>%
+  summarize(
+    avg_combined_kpcpy = mean(combined_estimate_kpcpy, na.rm = TRUE),
+    avg_household_kpcpy = mean(household_estimate_kpcpy, na.rm = TRUE),
+    avg_retail_kpcpy = mean(retail_estimate_kpcpy, na.rm = TRUE),
+    avg_food_service_kpcpy = mean(food_service_estimate_kpcpy, na.rm = TRUE))
+
+# averageFoodWasteByRegion
+# Order the data by combined averages
+averageFoodWasteByRegion <- averageFoodWasteByRegion[order(averageFoodWasteByRegion$avg_combined_kpcpy, decreasing = TRUE), ]
+
+# Show how different categories of per-capita food waste compare in each region
+averageFoodWasteByRegion <- ggplot(averageFoodWasteByRegion, aes(x = reorder(region, avg_combined_kpcpy), y = avg_combined_kpcpy, fill = "Combined")) +
+  geom_bar(stat = "identity", fill = "blue", width = 0.7) +
+  geom_col(aes(y = avg_household_kpcpy, fill = "Household"), width = 0.7) +
+  geom_col(aes(y = avg_retail_kpcpy, fill = "Retail"), width = 0.7) +
+  geom_col(aes(y = avg_food_service_kpcpy, fill = "Food Service"), width = 0.7) +
+  labs(title = "Relative Proportions of Food Waste Types by Region",
+    x = "Region",
+    y = "Average Per-Capita Food Waste (kg/year)") +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+  scale_fill_manual(
+    values = c("Household" = "#3fb619", "Retail" = "blue", "Food Service" = "orange"),
+    name = "Food Waste Types",
+    labels = c("Retail", "Household", "Food Service")
+  ) +
+  guides(fill = guide_legend(title = "Food Waste Types")) +
+  coord_flip() +
+  remove_background_theme() +
+  theme(legend.position = "top")
+
+ggplotly(averageFoodWasteByRegion,tooltip = c("x","y")) %>%
+  layout(aspectratio = list(x = 1, y = 1)) %>%
+  config(displayModeBar = FALSE)  %>%
+  layout(legend = list(orientation = "h", x = 0, y = 1.1)) %>%
+  config(displayModeBar = FALSE)
+  
+
+```
+```{=html}
+
+<section class="col-lg-6">
 
 </section>
 
 </section>
+
+<h2 class="text-center fw-bold my-4">Food Waste in Singapore</h2>
+
+<p>Food waste is a serious problem in Singapore, as it affects food security and puts pressure on resources. This is especially concerning given that Singapore imports over 90% of its food supply and is a land-scarce country. <a href="https://www.towardszerowaste.gov.sg/foodwaste/#:~:text=When%20food%20is%20wasted%2C%20more,puts%20pressure%20on%20our%20resources." target="_blank">Source: towardszerowaste.gov.sg</a></p>
+
+<p>According to the National Environment Agency (NEA), Singapore generated 763,000 tonnes of food waste in 2022 and this accounted for 11% of total waste. This amount has increased steadily over the years, and it is expected to continue to grow as the population and economy expand. Source: <a href="https://www.nea.gov.sg/our-services/waste-management/waste-statistics-and-overall-recycling" target="_blank">2022 Waste Statistics and Overall Recycling Table</a></p>
+
+In Singapore, a country with a strong food culture we often buy, order, and cook more than what we need.
+
+Food waste is one of the top 3 waste generated in Singapore, behind paper and plastic waste.
+```
+```{r foodWasteData_sg, echo=FALSE, warning=FALSE, message=FALSE}
+# foodWasteData_sg <- foodWasteData_sg %>% pivot_longer(cols = disposed_tonnes:disposed_tonnes:recycled_tonnes:generated_tonnes,
+#               names_to = "category",
+#               values_to = "value")
+# 
+#  foodWasteData_sg
+# 
+# food_waste_stacked_chart <- ggplot(foodWasteData_sg) +
+#   geom_point(aes(year, value, col=category)) +
+#   theme_minimal() + ylim(c(0, 1000000)) +
+#   labs(y ="") +
+#   theme(axis.text.x = element_text(angle = 90, size = 10)) +
+#   scale_fill_manual(values = c("green", "blue", "red"))
+#
+# food_waste_stacked_chart
+
+# food_waste_stacked_chart <- ggplot(foodWasteData_sg, aes(year, value, fill=category)) +
+#   geom_bar(stat = "identity") +
+#   theme_minimal() + ylim(c(0, 1000000)) +
+#   labs(y ="") +
+#   theme(axis.text.x = element_text(angle = 90, size = 10))
+#   scale_fill_manual(values = c("green", "blue", "red"))
+
+food_waste_stacked_chart <- ggplot(foodWasteData_sg) +
+  geom_col(fill="grey", aes(year, generated_tonnes)) +
+  geom_col(fill="brown", aes(year, disposed_tonnes)) +
+  geom_col(fill="#3fb619", aes(year, recycled_tonnes)) +
+  theme_minimal() + ylim(c(0, 1000000)) +
+  labs(y ="") +
+  theme(axis.text.x = element_text(angle = 90, size = 8)) +
+  remove_background_theme() +
+  scale_x_continuous(breaks = seq(2003, 2022, by = 1))
+
+
+ggplotly(food_waste_stacked_chart,tooltip = c("x","y")) %>%
+  layout(
+         aspectratio = list(x = 1, y = 1)) %>%
+  config(displayModeBar = FALSE)
+```
+
+```{=html}
+<h2 id="test">References</h2>
+<section style="font-size:12px;">
+
+https://greenisthenewblack.com/the-truth-about-food-waste-in-singapore-and-beyond/
+<br>
+https://www.unep.org/news-and-stories/story/why-global-fight-tackle-food-waste-has-only-just-begun
+<br>
+https://worldpopulationreview.com/country-rankings/food-waste-by-country
+<br>
+https://www.bestinsingapore.co/food-wastage-statistics-singapore/
+<br>
+https://www.fao.org/state-of-food-agriculture/2019/en/
+<br>
+https://www.todayonline.com/singapore/every-singaporean-household-throws-away-average-s258-worth-food-year-study
+<br>
+https://blogs.ntu.edu.sg/hp3203-2021s1-u21/whatisfoodwastage/in-singapore/
+</section>
+</section>
+```

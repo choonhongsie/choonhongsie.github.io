@@ -1,0 +1,150 @@
+---
+filters: 
+  - shinylive
+---
+
+```{r Data manipulation, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+
+foodWasteData <- read_csv("src/data/UNEP Food Waste Statistics.csv")
+
+#Create new column for combined estimate in tonnes/year
+foodWasteData <- mutate(foodWasteData, combined_estimate_tonnes_per_year = foodWasteData$`Household estimate (tonnes/year)` + foodWasteData$`Retail estimate (tonnes/year)` + foodWasteData$`Food service estimate (tonnes/year)`)
+foodWasteData <- foodWasteData[, c(1,2,13,3,4,5,6,7,8,9,10,11,12)]
+
+# Changing column names to make them lowercase and include underscores for easier reference
+new_col_names <- c("country", "combined_estimate_kpcpy", "combined_estimate_tpy", "household_estimate_kpcpy", "household_estimate_tpy", "retail_estimate_kpcpy", "retail_estimate_tpy", "food_service_estimate_kpcpy", "food_service_estimate_tpy", "estimate_confidence", "m49_code", "region", "source")
+names(foodWasteData) <- new_col_names
+
+# Get source column 
+dataSources <- foodWasteData %>% select(country, m49_code, source)
+# Remove source column 
+foodWasteData <- foodWasteData[, -13]
+
+# Find total global food waste in 2021
+total_foodwaste_2021 <- sum(foodWasteData$combined_estimate_tpy)
+  
+total_foodwaste_2021 <- format(total_foodwaste_2021, big.mark = ",", scientific = FALSE) 
+dataT <- foodWasteData
+
+# What are the top 10 and bottom 10 countries for combined per-capita food waste?
+# Subset the dataframe to select the top 10 countries with the highest and lowest combined per-capita food waste
+# order() sort the data in ascending order from the lowest index 
+topCountries <- tail(foodWasteData[order(foodWasteData$combined_estimate_kpcpy), ], 10)
+bottomCountries <- head(foodWasteData[order(foodWasteData$combined_estimate_kpcpy), ], 10)
+
+top_5_countries_chart <- ggplot(topCountries, aes(x = reorder(country, -combined_estimate_kpcpy), y = combined_estimate_kpcpy)) +
+  geom_bar(stat = "identity", fill = "red", width = 0.7) +
+  geom_text(aes(label = combined_estimate_kpcpy), hjust = 0.5, vjust = -0.3, size = 3) +  # Add labels
+  labs(
+    title = "The 10 Countries with Highest Combined Per-Capita Food Waste",
+    x = "Country",
+    y = "Per-Capita Food Waste (kg/year)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_manual(
+    values = c("blue" = "Combined"),
+    name = "Waste Type",
+    labels = c("Combined")
+  ) +
+  guides(fill = FALSE)  # Hide the legend
+
+
+# Show the 10 countries with the lowest combined per-capita food waste
+bottom_5_countries_chart <- ggplot(bottomCountries, aes(x = reorder(country, -combined_estimate_kpcpy), y = combined_estimate_kpcpy)) +
+  geom_bar(stat = "identity", fill = "#277a36", width = 0.7) +
+  geom_text(aes(label = combined_estimate_kpcpy), hjust = 0.5, vjust = -0.3, size = 3) +  # Add labels
+  labs(
+    title = "The 10 Countries with Lowest Combined Per-Capita Food Waste",
+    x = "Country",
+    y = "Per-Capita Food Waste (kg/year)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# my_data <- foodWasteData 
+# my_data %>% str()
+# my_data
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+foodWasteData_region <- unique(sort(foodWasteData$region))
+
+foodWasteData <- foodWasteData %>% select(country, household_estimate_tpy, region) %>% filter(region == "South-eastern Asia")
+
+# ggplot(foodWasteData, aes(country, household_estimate_tpy)) + geom_bar()
+```
+
+<!-- <h2>How much food is wasted in 2021 in total?</h2> -->
+
+<!-- <p>`r total_foodwaste_2021` tonnes</p> -->
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+library(shiny)
+library(shinydashboard)
+
+ui <- dashboardPage(
+  skin="green",
+  dashboardHeader(title="Food Waste Dashboard"),
+  dashboardSidebar(
+    sidebarMenu(
+                id = "sidebar",
+                menuItem("Dataset", tabName = "data", icon = icon("database")),
+                menuItem("Visualization", tabName = "viz", icon=icon("chart-line")),
+                
+                menuItem("Choropleth Map", tabName = "map", icon=icon("map"))
+  )),
+  dashboardBody(
+    tabItems(
+      # First tab item 
+      tabItem(tabName = "data", tabBox(id="t1", width = 12, 
+                     tabPanel("Dataset 1"),
+                      # content in About
+                      fluidRow(
+                                column(width = 8,
+                                       tags$img(src="Food Waste Background image.jpg", width = 600, height = 300),
+                                       tags$br(),
+                                       tags$a("image by Freepik"), align = "center"),
+                                column(width = 8,
+                                       tags$br(),
+                                       tags$p("This data set comes from UNEP 2021 Food Waste"))
+                      ),
+                     tabPanel("Data", icon = icon("table"), h2("tabPanel-2")),
+                     tabPanel("Structure", icon=icon("uncharted"), verbatimTextOutput("structure"))),
+              ),
+      # Second tab item
+      tabItem(tabName = "viz", tabBox(id="t2", width = 12, 
+                                       tabPanel("About", h4("tabpabel1"), plotOutput("bar"))))# <-- End of First tab item 
+      ) # <-- End of all tab items     
+  )
+)
+server <- function(input, output, session) {
+  output$dataT <- renderDataTable(my_data)
+  
+  # Structure 
+  output$structure <- renderPrint(
+    my_data %>% str()
+  )
+  output$bar <- renderplot(
+    ggplot(bottomCountries, aes(x = reorder(country, -combined_estimate_kpcpy), y = combined_estimate_kpcpy)) +
+  geom_bar(stat = "identity", fill = "#277a36", width = 0.7) +
+  geom_text(aes(label = combined_estimate_kpcpy), hjust = 0.5, vjust = -0.3, size = 3) +  # Add labels
+  labs(
+    title = "The 10 Countries with Lowest Combined Per-Capita Food Waste",
+    x = "Country",
+    y = "Per-Capita Food Waste (kg/year)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_manual(
+    values = c("blue" = "Combined"),
+    name = "Waste Type",
+    labels = c("Combined")
+  )  # Hide the legend
+}))
+
+shinyApp(ui, server)
+```
