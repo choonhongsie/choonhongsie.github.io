@@ -3,6 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Arimo&display=swap');
 * {
   font-family: "Poppins", Sans-Serif;
+  font-size: 16px;
 }
 .image-container h5 {
   color:white;
@@ -81,7 +82,7 @@
   right: 20px;
 }
 
-/**/
+/* Scroll Button */
 #myBtn {
 
   position: fixed;
@@ -100,4 +101,17 @@
 
 #myBtn:hover {
   background-color: #555;
+}
+
+.cell-output-display img {
+  width:100%;
+}
+
+.foodwasteword {
+  background-color: #3fb619; 
+  border-radius:10px; 
+  color:white;
+  display: inline-block;
+  width: 12%;
+  padding: 10px 5px 5px 5px;
 }

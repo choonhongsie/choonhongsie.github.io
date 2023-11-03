@@ -118,12 +118,11 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<!-- <h2>How much food is wasted in 2021 in total?</h2> -->
-<!-- <p>930,857,271 tonnes</p> -->
 <pre class="shinylive-r" data-engine="r"><code>#| standalone: true
 #| viewerHeight: 600
 library(shiny)
 library(shinydashboard)
+
 
 ui &lt;- dashboardPage(
   skin="green",
@@ -131,61 +130,109 @@ ui &lt;- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
                 id = "sidebar",
-                menuItem("Dataset", tabName = "data", icon = icon("database")),
-                menuItem("Visualization", tabName = "viz", icon=icon("chart-line")),
+                menuItem("Dataset 1", tabName = "data1", icon = icon("database")),
+                menuItem("Visualisation", tabName = "vis1", icon = icon("chart-line")),
+                menuItem("Choropleth Map", tabName = "map", icon=icon("map")),
+                tags$br(),
                 
-                menuItem("Choropleth Map", tabName = "map", icon=icon("map"))
-  )),
+                menuItem("Dataset 2", tabName = "data2", icon = icon("database")),
+                menuItem("Visualisation", tabName = "vis2", icon = icon("chart-line"))
+                )),
   dashboardBody(
-    tabItems(
-      # First tab item 
-      tabItem(tabName = "data", tabBox(id="t1", width = 12, 
-                     tabPanel("Dataset 1"),
-                      # content in About
-                      fluidRow(
-                                column(width = 8,
-                                       tags$img(src="Food Waste Background image.jpg", width = 600, height = 300),
-                                       tags$br(),
-                                       tags$a("image by Freepik"), align = "center"),
-                                column(width = 8,
-                                       tags$br(),
-                                       tags$p("This data set comes from UNEP 2021 Food Waste"))
-                      ),
-                     tabPanel("Data", icon = icon("table"), h2("tabPanel-2")),
-                     tabPanel("Structure", icon=icon("uncharted"), verbatimTextOutput("structure"))),
-              ),
-      # Second tab item
-      tabItem(tabName = "viz", tabBox(id="t2", width = 12, 
-                                       tabPanel("About", h4("tabpabel1"), plotOutput("bar"))))# &lt;-- End of First tab item 
-      ) # &lt;-- End of all tab items     
-  )
-)
-server &lt;- function(input, output, session) {
-  output$dataT &lt;- renderDataTable(my_data)
-  
-  # Structure 
-  output$structure &lt;- renderPrint(
-    my_data %&gt;% str()
-  )
-  output$bar &lt;- renderplot(
-    ggplot(bottomCountries, aes(x = reorder(country, -combined_estimate_kpcpy), y = combined_estimate_kpcpy)) +
-  geom_bar(stat = "identity", fill = "#277a36", width = 0.7) +
-  geom_text(aes(label = combined_estimate_kpcpy), hjust = 0.5, vjust = -0.3, size = 3) +  # Add labels
-  labs(
-    title = "The 10 Countries with Lowest Combined Per-Capita Food Waste",
-    x = "Country",
-    y = "Per-Capita Food Waste (kg/year)"
-  ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_fill_manual(
-    values = c("blue" = "Combined"),
-    name = "Waste Type",
-    labels = c("Combined")
-  )  # Hide the legend
-}))
+                tabItems(
+                          # First tab item
+                          tabItem(
+                                  tabName = "data1", 
+                                  tabBox(id="t1", width = 12,
+                                  tabPanel("Dataset 1",
+                                  # content in About
+                                  fluidRow(
+                                            column(width = 8,
+                                            tags$img(src="Food Waste Background image.jpg", width = 600, height = 300),
+                                            tags$br(),
+                                            tags$a("image by Freepik"), align = "center"),
+                                            column(width = 8,
+                                            tags$br(),
+                                            tags$p("This data set comes from UNEP 2021 Food Waste"))
+                                          )), # end of first tabPanel
+                                  tabPanel("Data", dataTableOutput("dataTB_UNEP") ,icon = icon("table")),
+                                  tabPanel("Structure", icon = icon("uncharted"), verbatimTextOutput("structure")),
+                                  )), # end of first tabItem
+                          # Second tab item
+                          tabItem(
+                                  tabName = "vis1", 
+                                  tabBox(id="t2", width = 12,
+                                  tabPanel("Countries by Region", value="trends", plotOutput("bar"))
+                                      )), # end of Second tabItem
+                          # Fourth tab item
+                          tabItem(
+                                  tabName = "data2", 
+                                  tabBox(id="t2", width = 12,
+                                  tabPanel("Dataset 2",
+                                  # content in About
+                                  fluidRow(
+                                            column(width = 8,
+                                            tags$img(src="Food Waste Background image.jpg", width = 600, height = 300),
+                                            tags$br(),
+                                            tags$a("image by Freepik"), align = "center"),
+                                            column(width = 8,
+                                            tags$br(),
+                                            tags$p("This data set comes from UNEP 2021 Food Waste"))
+                                          ))
+                                  )))# end all tabItems
+                ))
+  # Define server logic required to draw a histogram
+  server &lt;- function(input, output, session) {
 
-shinyApp(ui, server)</code></pre>
+    # Structure 
+    output$structure &lt;- renderPrint(FWD_UNEP %&gt;% str())
+  
+    # DataTable
+    output$dataTB_UNEP &lt;- renderDataTable(FWD_UNEP)
+
+    output$bar &lt;- renderPlot({
+      
+      # data = sample %&gt;%
+      #   filter(country %in% input$var1) %&gt;%
+      #   select("country") 
+
+      # Visualize total food waste broken down by source
+      ggplot() +
+        geom_chicklet(radius = grid::unit(2, 'mm'),
+                      aes(x = c("Household", "Retail", "Food Service"), 
+                          y = c(as.numeric(region_SEA_household), 
+                                as.numeric(region_SEA_retail), 
+                                as.numeric(region_SEA_food_sevice)), 
+                          fill = c("#3fb619", "orange", "blue"))) +
+        geom_text(
+          aes(
+            x = c("Household", "Retail", "Food Service"),
+            y = c(as.numeric(region_SEA_household),
+                  as.numeric(region_SEA_retail),
+                  as.numeric(region_SEA_food_sevice)), 
+            hjust = 0.5, vjust = 2, fontface = "bold",
+            label = scales::comma(c(as.numeric(region_SEA_household),
+                                    as.numeric(region_SEA_retail),
+                                    as.numeric(region_SEA_food_sevice))))
+        ) +
+        labs(
+          title = paste0("Total Food Waste by Type at", region_SEA$region),
+          x = "Source",
+          y = "Total Food Waste (Tonnes)"
+        ) +
+        scale_fill_manual(
+          values = c("orange" = "orange", "#3fb619" = "#3fb619", "blue" = "blue"),
+          name = "Food Waste Types",
+          breaks = c("orange", "#3fb619", "blue"),
+          labels = c("Retail", "Household", "Food Service")
+        ) +
+        remove_background_theme() +
+        theme(plot.title = element_text(hjust = 0.5, size = 12, face = "bold")) 
+    })
+  }
+
+# Run the application
+shinyApp(ui,server)</code></pre>
 
 
 
