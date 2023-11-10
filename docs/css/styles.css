@@ -27,10 +27,11 @@
   color: #000000;
 }
 .profile-text-2 {
-  font-size: 3rem
+  font-size: 3rem;
 }
 #surname {
   color: #3fb619;
+  font-size:  3rem;
 }
 .btn {
   border-radius: 2rem;
@@ -84,7 +85,6 @@
 
 /* Scroll Button */
 #myBtn {
-
   position: fixed;
   bottom: 20px;
   right: 30px;
@@ -112,6 +112,19 @@
   border-radius:10px; 
   color:white;
   display: inline-block;
-  width: 12%;
+  width: 7rem;
   padding: 10px 5px 5px 5px;
+}
+
+
+/* References Section */
+#references p {
+  font-size: 12px;
+} 
+
+.sidebar {
+  padding: 40px;
+}
+.sidebar-item-text{
+  padding: 10px 0;
 }

@@ -1,5 +1,9 @@
+---
+sidebar: false
+---
+
 ```{=html}
-<section class="container-lg my-10 mx-10">
+<section class="container-lg my-5 mx-10">
     <section id="profile" class="row justify-content-lg-center">
         <section class="col-lg-auto" id="profile-ch">
             <img class="rounded-circle" alt="Choon Hong" src="src/images/Choon Hong.jpg" width="250px" height="250px" />

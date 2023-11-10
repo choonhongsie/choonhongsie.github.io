@@ -26,10 +26,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -39,18 +35,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<meta name="shinylive:serviceworker_dir" content=".">
-<script src="site_libs/quarto-contrib/shinylive-0.2.1/shinylive/load-shinylive-sw.js" type="module"></script>
-<script src="site_libs/quarto-contrib/shinylive-0.2.1/shinylive/run-python-blocks.js" type="module"></script>
-<link href="site_libs/quarto-contrib/shinylive-0.2.1/shinylive/shinylive.css" rel="stylesheet">
-<link href="site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
-  "location": "navbar",
-  "copy-button": false,
-  "collapse-after": 3,
-  "panel-placement": "end",
-  "type": "overlay",
-  "limit": 20,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -81,7 +66,6 @@ ul.task-list li input[type="checkbox"] {
     <span class="navbar-title">Food Waste in Singapore</span>
     </a>
   </div>
-            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
@@ -96,10 +80,6 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Dashboard</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./index.html#test" rel="" target="">
- <span class="menu-text">References</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="./about.html" rel="" target="">
  <span class="menu-text">About Me</span></a>
   </li>  
@@ -111,132 +91,21 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-layout-custom page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
+    
 <!-- main -->
-
-
-
-<pre class="shinylive-r" data-engine="r"><code>#| standalone: true
-#| viewerHeight: 600
-library(shiny)
-library(shinydashboard)
-
-
-ui &lt;- dashboardPage(
-  skin="green",
-  dashboardHeader(title="Food Waste Dashboard"),
-  dashboardSidebar(
-    sidebarMenu(
-                id = "sidebar",
-                menuItem("Dataset 1", tabName = "data1", icon = icon("database")),
-                menuItem("Visualisation", tabName = "vis1", icon = icon("chart-line")),
-                menuItem("Choropleth Map", tabName = "map", icon=icon("map")),
-                tags$br(),
-                
-                menuItem("Dataset 2", tabName = "data2", icon = icon("database")),
-                menuItem("Visualisation", tabName = "vis2", icon = icon("chart-line"))
-                )),
-  dashboardBody(
-                tabItems(
-                          # First tab item
-                          tabItem(
-                                  tabName = "data1", 
-                                  tabBox(id="t1", width = 12,
-                                  tabPanel("Dataset 1",
-                                  # content in About
-                                  fluidRow(
-                                            column(width = 8,
-                                            tags$img(src="Food Waste Background image.jpg", width = 600, height = 300),
-                                            tags$br(),
-                                            tags$a("image by Freepik"), align = "center"),
-                                            column(width = 8,
-                                            tags$br(),
-                                            tags$p("This data set comes from UNEP 2021 Food Waste"))
-                                          )), # end of first tabPanel
-                                  tabPanel("Data", dataTableOutput("dataTB_UNEP") ,icon = icon("table")),
-                                  tabPanel("Structure", icon = icon("uncharted"), verbatimTextOutput("structure")),
-                                  )), # end of first tabItem
-                          # Second tab item
-                          tabItem(
-                                  tabName = "vis1", 
-                                  tabBox(id="t2", width = 12,
-                                  tabPanel("Countries by Region", value="trends", plotOutput("bar"))
-                                      )), # end of Second tabItem
-                          # Fourth tab item
-                          tabItem(
-                                  tabName = "data2", 
-                                  tabBox(id="t2", width = 12,
-                                  tabPanel("Dataset 2",
-                                  # content in About
-                                  fluidRow(
-                                            column(width = 8,
-                                            tags$img(src="Food Waste Background image.jpg", width = 600, height = 300),
-                                            tags$br(),
-                                            tags$a("image by Freepik"), align = "center"),
-                                            column(width = 8,
-                                            tags$br(),
-                                            tags$p("This data set comes from UNEP 2021 Food Waste"))
-                                          ))
-                                  )))# end all tabItems
-                ))
-  # Define server logic required to draw a histogram
-  server &lt;- function(input, output, session) {
-
-    # Structure 
-    output$structure &lt;- renderPrint(FWD_UNEP %&gt;% str())
-  
-    # DataTable
-    output$dataTB_UNEP &lt;- renderDataTable(FWD_UNEP)
-
-    output$bar &lt;- renderPlot({
-      
-      # data = sample %&gt;%
-      #   filter(country %in% input$var1) %&gt;%
-      #   select("country") 
-
-      # Visualize total food waste broken down by source
-      ggplot() +
-        geom_chicklet(radius = grid::unit(2, 'mm'),
-                      aes(x = c("Household", "Retail", "Food Service"), 
-                          y = c(as.numeric(region_SEA_household), 
-                                as.numeric(region_SEA_retail), 
-                                as.numeric(region_SEA_food_sevice)), 
-                          fill = c("#3fb619", "orange", "blue"))) +
-        geom_text(
-          aes(
-            x = c("Household", "Retail", "Food Service"),
-            y = c(as.numeric(region_SEA_household),
-                  as.numeric(region_SEA_retail),
-                  as.numeric(region_SEA_food_sevice)), 
-            hjust = 0.5, vjust = 2, fontface = "bold",
-            label = scales::comma(c(as.numeric(region_SEA_household),
-                                    as.numeric(region_SEA_retail),
-                                    as.numeric(region_SEA_food_sevice))))
-        ) +
-        labs(
-          title = paste0("Total Food Waste by Type at", region_SEA$region),
-          x = "Source",
-          y = "Total Food Waste (Tonnes)"
-        ) +
-        scale_fill_manual(
-          values = c("orange" = "orange", "#3fb619" = "#3fb619", "blue" = "blue"),
-          name = "Food Waste Types",
-          breaks = c("orange", "#3fb619", "blue"),
-          labels = c("Retail", "Household", "Food Service")
-        ) +
-        remove_background_theme() +
-        theme(plot.title = element_text(hjust = 0.5, size = 12, face = "bold")) 
-    })
-  }
-
-# Run the application
-shinyApp(ui,server)</code></pre>
+<main class="content" id="quarto-document-content">
 
 
 
 
+<iframe height="800px" width="100%" frameborder="no" src="https://choonhongnus.shinyapps.io/FoodWasteDashboard/"></iframe>
+
+
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
