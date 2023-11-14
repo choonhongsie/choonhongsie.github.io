@@ -118,13 +118,28 @@
 
 
 /* References Section */
-#references p {
-  font-size: 12px;
-} 
-
 .sidebar {
   padding: 40px;
 }
 .sidebar-item-text{
   padding: 10px 0;
+}
+
+#quarto-content > * {
+  margin-top: 0;
+  padding: 0;
+}
+.sidebar-menu-container {
+  padding: 20px;
+}
+.anchorjs-link  {
+  display: none;
+}
+
+.accordion-body p, .accordion-body p a {
+  font-size: 0.8rem;  
+}
+
+section#introduction, section#Singapore {
+    padding: 0 1rem;
 }

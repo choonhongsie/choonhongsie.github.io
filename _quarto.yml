@@ -14,24 +14,28 @@ website:
         text: Dashboard
       - href: about.qmd
         text: About Me
-
+  
+  
   sidebar:
-    - title: "Tutorials"
       style: "floating"
       background: light
-      contents: 
+      contents:
         - href: index.qmd#introduction
           text: Introduction
         - href: index.qmd#whatIsFW
           text: What is Food Waste?
         - href: index.qmd#totalFWbyRegion
-          text: Do you know that household accounts for most of the food waste?  
-        - href: index.qmd#worldMap
-          text: Which Country Generated the most Household Food Waste?  
+          text: Do you know that household accounts <br>for most of the food waste?
+        - href: index.qmd#worldMap 
+          text: Which Country Generated the <br>most Household Food Waste?
         - href: index.qmd#closerLook
           text: Let's take a closer look
+        - href: index.qmd#top10-bottom10
+          text: What are the Top 10 and Bottom 10 Countries for Combined<br>per-capita Food Waste?
+        - href: index.qmd#FW_SG
+          text: Food Waste in Singapore
         - href: index.qmd#references
-          text: References 
+          text: References
 
 
 format:
