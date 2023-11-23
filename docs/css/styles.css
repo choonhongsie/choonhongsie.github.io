@@ -1,14 +1,19 @@
 /* Import Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Arimo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Signika&display=swap');
 * {
-  font-family: "Poppins", Sans-Serif;
+  font-family: "Signika", Sans-Serif; 
   font-size: 16px;
 }
 .image-container h5 {
   color:white;
   font-size: 1.6rem;
   width: 80%;
+}
+
+h1 {
+  margin-top: 50px;
 }
 /* Profile Section */
 #profile {

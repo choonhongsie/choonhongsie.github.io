@@ -34,13 +34,23 @@ website:
           text: What are the Top 10 and Bottom 10 Countries for Combined<br>per-capita Food Waste?
         - href: index.qmd#FW_SG
           text: Food Waste in Singapore
+        - href: index.qmd#tips
+          text: Tips to Reduce Food Waset in Singapore
         - href: index.qmd#references
           text: References
+        - href: index.qmd#data_sources
+          text: Data Sources  
 
+#footer
+  page-footer:
+    border: true
+    left: Copyright 2023, Sie Choon Hong
+    right: This site is built with <a href="https://quarto.org/">Quarto</a> and <a href="https://www.rstudio.com/"><img src="https://www.rstudio.com/wp-content/uploads/2018/10/RStudio-Logo-flat.svg" class="img-fluid" alt="RStudio" width="60"></a>. 
 
 format:
   html:
     theme: cosmo
+    toc: true
     css: 
       - /css/styles.css
       - /css/bootstrap.css

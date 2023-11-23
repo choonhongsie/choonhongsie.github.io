@@ -17,12 +17,13 @@ format:
 </section>
 
 <section id="introduction" class="container" width="100%">
+    
 <h4 class="text-center fw-bold my-4">Introduction</h4>
-<p>Food waste is a major global problem (UNEP, 2022). According to the United Nations, it is estimated that one-third of the food produced for human consumption is lost or wasted on a global scale, totaling around 1.3 billion tons annually (FAO, 2011).
+<p>Food waste is a major global problem (UNEP, 2022). According to the United Nations (FAO, n.d.), it is estimated that <strong>1/3 or 30%</strong> of the world’s food produced for human consumption was lost or wasted on a global scale, totaling around <strong>1.3 billion tons annually</strong> (FAO, 2011).
 </p>
 
 <h4 id="whatIsFW" class="text-center fw-bold my-4">What is <div class="foodwasteword">Food Waste?<div></h4>
-<p>According to the <strong>United Nations' Food and Agricultural Organisation (FAO)</strong>,"food waste" refers to the discarding or non-food use of products that are safe and nutritious for human consumption</p>
+<p>According to the United Nations' Food and Agricultural Organisation (FAO),"food waste" refers to the discarding or non-food use of products that are safe and nutritious for human consumption.</p>
 ```
 ```{r import libraries, echo=FALSE, warning=FALSE, message=FALSE}
 library(tidyverse)
@@ -32,7 +33,7 @@ library(scales)
 library(highcharter)
 library(gganimate)
 library(ggthemes)
-library(gifski)
+library(randomcoloR)
 
 FWD_sg <- read_csv("src/data/Food Waste Statistics.csv")
 FWD_UNEP <- read_csv("src/data/UNEP Food Waste Statistics.csv")
@@ -57,9 +58,6 @@ FWD_UNEP <- FWD_UNEP[, c(1,2,13,3,4,5,6,7,8,9,10,11,12)]
 # Changing column names to make them lowercase and include underscores for easier reference
 new_col_names <- c("country", "combined_estimate_kpcpy", "combined_estimate_tpy", "household_estimate_kpcpy", "household_estimate_tpy", "retail_estimate_kpcpy", "retail_estimate_tpy", "food_service_estimate_kpcpy", "food_service_estimate_tpy", "estimate_confidence", "m49_code", "region", "source")
 names(FWD_UNEP) <- new_col_names
-
-# Get source column 
-dataSources <- FWD_UNEP %>% select(country, m49_code, source)
 
 # Remove source column 
 FWD_UNEP <- FWD_UNEP[, -13]
@@ -88,7 +86,6 @@ total_FW_region <- FWD_UNEP_region %>%
             total_household_estimate_kpcpy = sum(household_estimate_kpcpy),
             total_retail_estimate_kpcpy = sum(retail_estimate_kpcpy),
             total_food_service_estimate_kpcpy = sum(food_service_estimate_kpcpy)) 
-
 # Calculate averages for each per-capita food waste column
 avg_FW_region <- FWD_UNEP_region %>%
   summarize(
@@ -100,6 +97,9 @@ avg_FW_region <- FWD_UNEP_region %>%
 total_household <- sum(FWD_UNEP$household_estimate_tpy)
 total_retail <- sum(FWD_UNEP$retail_estimate_tpy)
 total_food_service <- sum(FWD_UNEP$food_service_estimate_tpy)
+
+# Arrange total_combined_estimate_kpcpy in desc order
+total_FW_region <- total_FW_region %>% arrange(-total_combined_estimate_kpcpy)
 
 # Create a data frame
 total_FW_by_sector <- data.frame(
@@ -116,11 +116,56 @@ avg_FW_region <- avg_FW_region[order(avg_FW_region$avg_combined_kpcpy, decreasin
 new_col_names_sg <- c("year", "disposed_tonnes", "recycled_tonnes", "generated_tonnes", "recycling_rate_percent")
 names(FWD_sg) <- new_col_names_sg
 
+# Remove rows with NA
+FWD_sg <- na.omit(FWD_sg)
+
+# Column to rows and rename 
+FWD_sg <- FWD_sg %>% pivot_longer(cols = disposed_tonnes:recycled_tonnes:generated_tonnes,
+              names_to = "Sector",
+              values_to = "Tonnes") %>% 
+          mutate(Sector = case_when(
+            Sector == "disposed_tonnes" ~ "Disposed",
+            Sector == "generated_tonnes" ~ "Generated",
+            Sector == "recycled_tonnes" ~ "Recycled",
+            TRUE ~ as.character(Sector)
+          ))
+
 # WasteStats_SG
 # Rename Column Names
 new_col_names_waste_sg <- c("waste_type", "generated_tonnes", "recycled_tonnes", "recycling_rate_percent", "disposed_tonnes")
 names(WasteStats_SG) <- new_col_names_waste_sg
 WasteStats_SG <- WasteStats_SG %>% filter(waste_type != "Overall")
+
+first_5_rows <- head(WasteStats_SG, 5) %>% select(waste_type, generated_tonnes)
+
+grouped_sum <- WasteStats_SG %>%
+  slice(6:14) %>%
+    summarise(waste_type = "Others", generated_tonnes = sum(generated_tonnes))
+
+# Combine first_5_rows and 'others'
+final_result <- bind_rows(first_5_rows, grouped_sum)
+
+# test1 <- FWD_UNEP %>%
+#             group_by(region) %>%
+#             summarize(
+#                 Household_Total = sum(household_estimate_tpy),
+#                 Retail_Total = sum(retail_estimate_tpy),
+#                 Food_Service_Total = sum(food_service_estimate_tpy)
+#             )
+# 
+# test2 <- test1 %>% pivot_longer(cols = Household_Total:Retail_Total:Food_Service_Total,
+#                 names_to = "Sector",
+#                 values_to = "Value") %>% 
+# # Rename observation rows in the "Sector" column
+#   mutate(Sector = case_when(
+#     Sector == "Household_Total" ~ "Household",
+#     Sector == "Retail_Total" ~ "Retail",
+#     Sector == "Food_Service_Total" ~ "Food Service",
+#     TRUE ~ as.character(Sector)
+#   ))
+# test2
+# test2 %>%
+#   hchart('column', hcaes(x = Sector, y = Value))
 ```
 
 ```{=html}
@@ -139,7 +184,7 @@ WasteStats_SG <- WasteStats_SG %>% filter(waste_type != "Overall")
   
 ```
 ```{r Total Food Waste by sector Pie Chart in the World, echo=FALSE, message=FALSE, warning=FALSE}
-# Create a pie chart using highcharter
+# Create Pie Chart using highcharter
 highchart() %>%
   hc_chart(type = "pie") %>%
   hc_add_series(total_FW_by_sector, "pie", hcaes(y = "value", name = "category", color = "color")) %>% 
@@ -157,7 +202,12 @@ highchart() %>%
   ) %>% 
   hc_title(text = "Total Food Waste by Sector in the World") %>%
   hc_legend(enabled = TRUE) %>%
-  hc_subtitle(text = "Total Food Waste (Tonnes/Year)") 
+  hc_subtitle(text = "Total Food Waste (Tonnes/Year)") %>% 
+  hc_credits(
+    enabled = TRUE,
+    text = "Source: NEA",
+    href = "#references"
+  ) 
 ```
 
 ```{=html}
@@ -165,6 +215,7 @@ highchart() %>%
       <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
 ```
 ```{r Total Food Waste by sector in the World Bar Chart, echo=FALSE, message=FALSE, warning=FALSE}
+# Create Bar Chart using ggplot and Plotly
 ggplot() +
   geom_chicklet(radius = grid::unit(2, 'mm'),
                 aes(x = c("Household", "Retail", "Food Service"),
@@ -186,7 +237,8 @@ ggplot() +
   labs(
     title = "Total Food Waste by Sector in the World",
     x = "",
-    y = "Total Food Waste (Tonnes/Year)"
+    y = "Total Food Waste (Tonnes/Year)",
+    caption = "Source: Kaggle"
   ) +
   scale_fill_manual(
     values = c("#3fb619" = "#3fb619", "#d62023" = "#d62023", "#8FB8FDff" = "#8FB8FDff"),
@@ -203,18 +255,24 @@ ggplot() +
   </div>
 </section>  
 <section class="col-lg-4 mt-4">
-  <p>The chart shows that households are the largest contributors to food waste, accounting for 61.1% of the total. This is followed by food services (26.2%) and retail establishments (12.7%).</p>
+  <p>The chart shows that households are the largest contributors to food waste, accounting for <strong>61.1%</strong> of the total. This is followed by food services <strong>26.2%</strong> and retail establishments <strong>12.7%</strong>.</p>
   </section>
 <h4 id="worldMap" class="text-center fw-bold my-4">Which Country Generated the most Household Food Waste?</h4>
 <h4 class="text-center fw-bold my-4">Let's see it from the World Map <i class="bi bi-map-fill"></i></h4>
 ```
 ```{r World Map Household,echo=FALSE, warning=FALSE, message=FALSE}
+# Create a World Map using highcharter
 data(worldgeojson, package = "highcharter")
 
 countries <- FWD_UNEP %>% select(country, household_estimate_tpy)
 
-highchart() %>% hc_title(text = "Household Food Waste by Countries (tonnes/year)") %>%
-hc_add_series_map(worldgeojson, countries, value = "household_estimate_tpy", joinBy = c("name", "country")) %>% 
+highchart() %>% hc_title(text = "Household Food Waste by Countries (Tonnes/Year)") %>%
+hc_add_series_map(worldgeojson, countries, value = "household_estimate_tpy", joinBy = c("name", "country"),states = list(
+                                  hover = list(
+                                  color = "#3fb619",
+                                  borderColor = "black",
+                                  shadow = FALSE
+                                  ))) %>% 
   hc_colorAxis(minColor = "white", maxColor = "#d62023") %>%
 hc_legend(valueDecimals = 0, valueSuffix = "%") %>% 
 hc_mapNavigation(enabled = TRUE)
@@ -228,6 +286,7 @@ hc_mapNavigation(enabled = TRUE)
 <section class="col-lg-8">
 ```
 ```{r 5 Countries with Highest Household Food Waste, echo=FALSE, warning=FALSE}
+# Create a Horizontal Bar Chart using ggplot and Plotly
 ggplot(combined, aes(reorder(country, household_estimate_tpy), household_estimate_tpy)) + 
   geom_chicklet(radius = grid::unit(2, 'mm'), fill = "#d62023") + 
   coord_flip(clip = "off") + 
@@ -236,7 +295,7 @@ ggplot(combined, aes(reorder(country, household_estimate_tpy), household_estimat
         plot.margin = margin(r = 120)) + 
   remove_background_theme() +
   labs(title = "The 5 Countries with Highest Household Food Waste",
-         x = "" , y = "Household Food Waste (tonnes/year)", caption = "Source: Kaggle - Household Food Waste Estimate of all Countries") 
+         x = "" , y = "Household Food Waste (tonnes/year)", caption = "Source: Kaggle") 
 ```
 
 ```{=html}
@@ -266,6 +325,7 @@ ggplot(combined, aes(reorder(country, household_estimate_tpy), household_estimat
     <div class="tab-pane fade show active" id="nav-top10" role="tabpanel" aria-labelledby="nav-top10-tab">
 ```
 ```{r Top 10 Countries, echo=FALSE, message=FALSE, warning=FALSE}
+# Create a Horizontal Bar Chart using ggplot and Plotly
 ggplot(topCountries, aes(x = reorder(country, combined_estimate_kpcpy), y = combined_estimate_kpcpy)) +
   geom_chicklet(radius = grid::unit(2, 'mm'), fill = "#d62023") +
   # geom_bar(stat = "identity", fill = "red", width = 0.7) +
@@ -298,30 +358,19 @@ ggplot(bottomCountries, aes(x = reorder(country, combined_estimate_kpcpy), y = c
     </div>
     <div class="tab-pane fade" id="nav-region" role="tabpanel" aria-labelledby="nav-region-tab">
 ```
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-#Show how different categories of per-capita food waste compare in each region
-total_FW_region <- ggplot(total_FW_region, aes(y = reorder(region, total_combined_estimate_kpcpy), x = total_combined_estimate_kpcpy, fill = "Combined")) +
-  geom_col(aes(x = total_household_estimate_kpcpy, fill = "Household", 
-               text = paste0("Household: ", total_household_estimate_kpcpy, "kg")), width = 0.7) +
-  geom_col(aes(x = total_food_service_estimate_kpcpy, fill = "Food Service", 
-               text = paste0("Food Service: ", total_food_service_estimate_kpcpy, "kg")), width = 0.7) +
-  geom_col(aes(x = total_retail_estimate_kpcpy, fill = "Retail", 
-               text = paste0("Retail: ", total_retail_estimate_kpcpy, "kg")), width = 0.7) +
-  labs(title = str_wrap("Total Food Waste Sector by Region", width = 35),
-    y = "",
-    x = "Total Per-Capita Food Waste (kg/year)") +
-  theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
-  scale_fill_manual(
-    values = c("Household" = "#d62023", "Retail" = "#3fb619", "Food Service" = "#8FB8FDff"),
-    name = "Food Waste Types",
-    labels = c("Retail", "Household", "Food Service")) +
-  guides(fill = guide_legend(title = "Food Waste Sector")) +
-  theme(plot.title = element_text(hjust = 0.5, size = 12, face = "bold"), axis.text.x = element_text(angle = 0, hjust = 1), legend.position = "bottom",plot.margin = margin(t = 15)) +
-  remove_background_theme()
-
-ggplotly(total_FW_region,tooltip = "text") %>%
-  config(displayModeBar = FALSE) %>%
-layout(legend = list(orientation = "h", x = -0.2, y = -0.2))
+```{r Total Food Waste by Region Horizontal Bar Chart, echo=FALSE, message=FALSE, warning=FALSE}
+# Create Horizontal Bar Chart using highcharter
+hchart(total_FW_region, type = "bar", hcaes(x = region, y = total_combined_estimate_kpcpy), color = "#d62023") %>% 
+  hc_title(text = "Total Food Waste by Region ") %>%
+  hc_subtitle(text = "Total Per-Capita Food Waste (Kg/Year)") %>% 
+  hc_tooltip(pointFormat = "<b>{point.name}</b>: {point.y} Kg/Capita/Year") %>% 
+  hc_xAxis(title = list(enabled = FALSE)) %>%  
+  hc_yAxis(title = list(enabled = FALSE))  %>% 
+  hc_credits(
+    enabled = TRUE,
+    text = "Source: Kaggle",
+    href = "#references"
+  )
 ```
 
 ```{=html}
@@ -329,41 +378,18 @@ layout(legend = list(orientation = "h", x = -0.2, y = -0.2))
   </div>
 </section>
 <section class="col-lg-4">
-  <h6><strong>Top 10 Countries</strong></h6>
-<p>The majority of the top 10 countries are situated in Sub-Saharan Africa (or Africa) and the Western Asia (or Middle East), regions known for their comparatively lower levels of socioeconomic development. According to International Monetary Fund (IMF) (2021), Sub-Saharan Africa was projected experience the slowest economic growth compared to other region in the world in 2021. Additionally, Sub-Saharan Africa and Western Asia's Gross Domestic Product (GDP) per capita figures  of approximately <strong>USD$1626.28</strong> and <strong>USD$6266.36</strong>, respectively, among the lowest in the world(O'Neill, 2023).</p>
+  <h5><strong>Top 10 Countries</strong></h5>
+<p>The majority of the top 10 countries are situated in Sub-Saharan Africa (or Africa) and the Western Asia (or Middle East), regions known for their comparatively lower levels of socioeconomic development. According to International Monetary Fund (IMF) (2021), Sub-Saharan Africa was projected experience the slowest economic growth compared to other region in the world in 2021. Additionally, Sub-Saharan Africa and Western Asia's Gross Domestic Product (GDP) per capita figures  of approximately <strong>USD$1626.28</strong> and <strong>USD$6266.36</strong>, respectively, among the lowest in the world (O'Neill, 2023).</p>
 
-<h6><strong>Bottom 10 Countries</strong></h6>
+<h5><strong>Bottom 10 Countries</strong></h5>
 <p>The majority of the bottom 10 countries are exhibiting the lowest food waste per capita are situated in Western Europe, which is renowned as a highly developed region globally.</p>
+
 </section>
 </section> 
 </section>
 ```
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-# Show how different categories of per-capita food waste compare in each region
-avg_FW_region <- ggplot(avg_FW_region, aes(y = reorder(region, avg_combined_kpcpy), x = avg_combined_kpcpy, fill = "Combined")) +
-  geom_col(aes(x = avg_household_kpcpy, fill = "Household", 
-               text = paste0("Household: ", avg_household_kpcpy, "kg")), width = 0.7) +
-  geom_col(aes(x = avg_food_service_kpcpy, fill = "Food Service", 
-               text = paste0("Food Service: ", avg_food_service_kpcpy, "kg")), width = 0.7) +
-  geom_col(aes(x = avg_retail_kpcpy, fill = "Retail", 
-               text = paste0("Retail: ", avg_retail_kpcpy, "kg")), width = 0.7) +
-  labs(title = str_wrap("Relative Proportions of Food Waste Sector by Region", width=30),
-    y = "",
-    x = "Average Per-Capita Food Waste (kg/year)")+
-  theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
-  scale_fill_manual(
-    values = c("Household" = "#d62023", "Retail" = "#3fb619", "Food Service" = "#8FB8FDff"),
-    name = "Food Waste Types",
-    labels = c("Retail", "Household", "Food Service")
-  ) +
-  guides(fill = guide_legend(title = "Food Waste Sector")) +
-  remove_background_theme() +
-  theme(plot.title = element_text(hjust = 0.5, size = 12, face = "bold"), 
-        legend.position = "bottom", plot.margin = margin(t = 15))
 
-ggplotly(avg_FW_region,tooltip = "text") %>%
-  config(displayModeBar = FALSE)%>%
-layout(aspectratio = list(x = 1, y = 1),legend = list(orientation = "h", x = -0.2, y = -0.2))
   # annotations = list(
   #     text = "Average Per-Capita Food Waste (kg/year)",  # Subtitle text
   #     showarrow = FALSE,
@@ -387,23 +413,22 @@ layout(aspectratio = list(x = 1, y = 1),legend = list(orientation = "h", x = -0.
   <img src="src/images/Singapore Food Waste Background.png" style="width:100%;height:300px;object-fit:cover;"/>
   
   <h5 class="center-text-bg-img">Food Waste in Singapore</h5>
-<p class="bottom-right-text-bg-img">Image by <a style="text-decoration:underline;color:white;" href="https://static.mothership.sg/1/2019/12/nea-survey-food-waste.png" target="_blank" style="color:white; text-decoration: none;">Freepik</a></p>
+<p class="bottom-right-text-bg-img">Image by <a style="text-decoration:underline;color:white;" href="https://static.mothership.sg/1/2019/12/nea-survey-food-waste.png" target="_blank" style="color:white; text-decoration: none;">Mothership</a></p>
 </section>
 
 <section id="singapore" class="container my-5" width="100%">
 <p>Food waste is a serious problem in Singapore, as it affects food security and puts pressure on resources. This is especially concerning given that Singapore imports over 90% of its food supply and is a land-scarce country (Towards Zero Waste, n.d.).</p>
 ```
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-FWD_sg <- FWD_sg %>% pivot_longer(cols = disposed_tonnes:disposed_tonnes:recycled_tonnes:generated_tonnes,
-              names_to = "Sector",
-              values_to = "Tonnes") %>% 
-          mutate(Sector = case_when(
-            Sector == "disposed_tonnes" ~ "Disposed",
-            Sector == "generated_tonnes" ~ "Generated",
-            Sector == "recycled_tonnes" ~ "Recycled",
-            TRUE ~ as.character(Sector)
-          ))
-
+```{r Spline Line Chart , echo=FALSE, warning=FALSE, message=FALSE}
+# Spline Line Chart
+FWD_sg %>% 
+  hchart('spline', hcaes(x = 'year', y = 'Tonnes', group = "Sector")) %>% 
+  hc_title(text = "Waste Statistics and Overall Recycling Table in Singapore") %>% 
+  hc_credits(
+    enabled = TRUE,
+    text = "Source: NEA",
+    href = "#references"
+  )
 # FWD_sg_line <- ggplot(FWD_sg, aes(x = year)) +
 #   geom_line(aes(y = Value, group = Type, color = Type)) +
 #   geom_point(aes(y = Value, color = Type)) +
@@ -419,28 +444,13 @@ FWD_sg <- FWD_sg %>% pivot_longer(cols = disposed_tonnes:disposed_tonnes:recycle
 # ggplotly(FWD_sg_line,tooltip = c("x", "y")) %>%
 #    config(displayModeBar = FALSE) %>%
 #   layout(dragmode = FALSE,legend = list(orientation = "h", x = -0.2, y = -0.2))
-
-# Rename observation rows in the "Sector" column
-  
-
-# Spline Plot
-FWD_sg %>% 
-  hchart('spline', hcaes(x = 'year', y = 'Tonnes', group = "Sector")) %>% 
-  hc_title(text = "Waste Statistics and Overall Recycling Table in Singapore")
 ```
 
 ```{=html}
-<p>According to the National Environment Agency (NEA) (n.d.), Singapore generated <strong>763,000 tonnes</strong> of food waste in 2022 and this accounted for 11% of total waste. This amount has increased steadily over the years, and it is expected to continue to grow as the population and economy expand.</p>
+<p>Singapore generated <strong>763,000 tonnes</strong> of food waste in 2022 and this accounted for <strong>11%</strong> of total waste (NEA, n.d.). This amount has increased steadily over the years, and it is expected to continue to grow as the population and economy expand.</p>
 ```
 ```{r WasteStats_SG, echo=FALSE, warning=FALSE, message=FALSE}
-first_5_rows <- head(WasteStats_SG, 5) %>% select(waste_type, generated_tonnes)
-
-grouped_sum <- WasteStats_SG %>%
-  slice(6:14) %>%
-    summarise(waste_type = "Others", generated_tonnes = sum(generated_tonnes))
-
-final_result <- bind_rows(first_5_rows, grouped_sum)
-
+# Create Pie Chart using highcharter
 highchart() %>%
   hc_chart(type = "pie") %>%
   hc_add_series(final_result, "pie", hcaes(y = "generated_tonnes", name = "waste_type", color = "waste_type"), center = c(50, 50), 
@@ -459,11 +469,16 @@ highchart() %>%
     ) %>% 
   hc_title(text = "Total Generated Waste by Type in Singapore") %>%
   hc_legend(enabled = TRUE) %>%
-  hc_subtitle(text = "Total Food Waste (Tonnes/Year)") 
+  hc_subtitle(text = "Total Waste Type (Tonnes/Year)") %>% 
+  hc_credits(
+    enabled = TRUE,
+    text = "Source: NEA",
+    href = "#references"
+  )
 ```
 
 ```{=html}
-<p><strong>Food waste ranks among the top 3 type of waste generated in Singapore</strong>, trailing behind paper/cardboard and plastic waste. Both Ferrous metal and paper/cardboard have a recycling rate of 99%. The "Others"" types is the combimnation waste type that accounts for <strong>less than 6% of the total waste.</strong></p>
+<p>Food waste ranks among the <strong>top 3 type of waste</strong> generated in Singapore, trailing behind paper/cardboard and plastic waste. Both Ferrous metal and paper/cardboard have a recycling rate of 99%. Go to the <a href="./dashboard.html" target="_blank">Dashboard </a><a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Navigate to Dataset 3 (Waste Type) --> Click 'Data' tab">to find out more.</a> The "Others" types is the combimnation waste type that accounts for <strong>less than 6% of the total waste.</strong></p>
 ```
 ```{r FWD_sg, echo=FALSE, warning=FALSE, message=FALSE}
 FWD_sg_by_type <- FWD_UNEP %>% filter(country == "Singapore") %>% select(household_estimate_tpy, retail_estimate_tpy, food_service_estimate_tpy) 
@@ -504,7 +519,6 @@ mutate(FWD_sg_by_type, color = c("#d62023", "#3fb619", "#8FB8FDff")) %>%
 #       name = "Food Waste Types",
 #       labels = c("Retail", "Household", "Food Service")
 # )
-# 
 
 highchart() %>%
   hc_chart(type = "pie") %>%
@@ -523,11 +537,49 @@ highchart() %>%
     ) %>% 
   hc_title(text = "Total Food Waste by Sector in Singapore") %>%
   hc_legend(enabled = TRUE) %>%
-  hc_subtitle(text = "Total Food Waste (Tonnes/Year)") 
-
+  hc_subtitle(text = "Total Food Waste (Tonnes/Year)") %>% 
+  hc_credits(
+    enabled = TRUE,
+    text = "Source: NEA",
+    href = "#references"
+  ) 
 ```
 
 ```{=html}
+<script>
+    $(document).ready(function(){
+  $('a[data-bs-toggle="tooltip"]').tooltip().click( function(e) {
+        e.preventDefault(); 
+  });
+});
+</script>
+
+<h4 class="text-center fw-bold my-4">How does Singapore compared Countries in South-Eastern Asia?</h4>
+
+
+<section class="d-flex col-lg-auto">
+<section class="mx-3">
+  <a href="./dashboard.html" target="_blank" class="btn btn-success rounded-2" role="button" data-bs-toggle="tooltip" data-delay='{"show": 100}' data-bs-placement="bottom" title="Click 'Visualisation' below Dataset 1 (UNEP) --> Select 'South-Eastern Asia' --> Scroll down to Horizontal Bar Chart
+">Go to Food Waste Dashboard</a>
+</section>
+<section>
+  <a class="btn btn-success rounded-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+    Click Me after you've check out the Dashboard
+  </a>
+  <div class="collapse" id="collapseExample">
+    <div class="card card-body">
+      <p>In the South-Eastern Asia region, Singapore ranks <strong>9 out of 11</strong>. It produces a relatively low amount of food waste, totaling only <strong>688,134 tonnes per year</strong> compared to other Southeast Asian countries. Currently, Indonesia holds the title for the highest amount of wasted food in Southeast Asia, with <strong>32,653,175 tonnes per year</strong>.</p> 
+      <p><i>Does this suggest that Singapore can overlook the food waste problem?</i><br><strong style="color: #d62023;" >NO!</strong> as Pulau Semakau is expected to be filled by <strong>2035</strong> (MSE, 2020). Additionally, food waste produces methane, a greenhouse gas that <strong>traps 30x</strong> more heat than CO2 (Zheng, 2019).</p>
+    </div>
+  </div>
+</section>
+</section>
+
+<h4 id = "tips" class="text-center fw-bold my-4">Tips to Reduce Food Waste in Singapore</h4>
+
+<img src="src/images/NM3217 Assignment 2.png" style="width:100%;object-fit:cover;"/>
+  <figcaption class="figure-caption text-end my-1">This infographic was created by Sie Choon Hong</figcaption>
+
 <section id="references" class="container mt-5" style="width:100%;">
   
 <div class="accordion" id="accordionExample">
@@ -537,36 +589,61 @@ highchart() %>%
         <h4>References</h4>
       </button>
     </h2>
-    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
       <div class="accordion-body">
-        <p>Miquelis, P. (2019, january 25). The Truth About Food Waste in Singapore (and beyond). <a href="https://greenisthenewblack.com/the-truth-about-food-waste-in-singapore-and-beyond/" target="_blank">https://greenisthenewblack.com/the-truth-about-food-waste-in-singapore-and-beyond/</a></p> 
-        
-<p>United Nation Environment Programme. (2022, September 26). Why the global fight to tackle food waste has only just begun. <a href="https://www.unep.org/news-and-stories/story/why-global-fight-tackle-food-waste-has-only-just-begun" target="_blank">https://www.unep.org/news-and-stories/story/why-global-fight-tackle-food-waste-has-only-just-begun</a></p>
+       <p>Food and Agriculture Organization. (n.d.). The State of Food and Agriculture - 2019. <a href="https://www.fao.org/state-of-food-agriculture/2019/en/" target="_blank">https://www.fao.org/state-of-food-agriculture/2019/en/</a></p>
 
-<p>https://worldpopulationreview.com/country-rankings/food-waste-by-country</p>
+<p>Food and Agriculture Organization of the United Nations (FAO). 2011. Global food losses and food waste – Extent, causes and prevention. Rome. <a href="https://www.fao.org/3/mb060e/mb060e00.htm" target="_blank">https://www.fao.org/3/mb060e/mb060e00.htm</a></p>
 
 <p>Lee, H.W. (2022, January 3).Food Wastage Statistics in Singapore. <a href="https://www.bestinsingapore.co/food-wastage-statistics-singapore/" target="_blank">https://www.bestinsingapore.co/food-wastage-statistics-singapore/</a></p>
 
-<p>Food and Agriculture Organization. (n.d.). The State of Food and Agriculture - 2019. <a href="https://www.fao.org/state-of-food-agriculture/2019/en/" target="_blank">https://www.fao.org/state-of-food-agriculture/2019/en/</a></p>
-
 <p>Low, Y.J. (2019, August 6). Every Singaporean household throws away an average S$258 worth of food a year: Study. <a href="https://www.todayonline.com/singapore/every-singaporean-household-throws-away-average-s258-worth-food-year-study" target="_blank">https://www.todayonline.com/singapore/every-singaporean-household-throws-away-average-s258-worth-food-year-study</a></p>
 
-<p>https://blogs.ntu.edu.sg/hp3203-2021s1-u21/whatisfoodwastage/in-singapore/</p>
-
-<p>Food and Agriculture Organization of the United Nations (FAO). 2011. Global food losses and food waste – Extent, causes and prevention. Rome. <a href="https://www.fao.org/3/mb060e/mb060e00.htm" target="_blank">https://www.fao.org/3/mb060e/mb060e00.htm</a></p>
+<p>Miquelis, P. (2019, january 25). The Truth About Food Waste in Singapore (and beyond). <a href="https://greenisthenewblack.com/the-truth-about-food-waste-in-singapore-and-beyond/" target="_blank">https://greenisthenewblack.com/the-truth-about-food-waste-in-singapore-and-beyond/</a></p>
 
 <p>National Environment Agency (NEA). (n.d.). Waste Statistics and Overall Recycling
 .<a href="https://www.nea.gov.sg/our-services/waste-management/waste-statistics-and-overall-recycling" target="_blank">https://www.nea.gov.sg/our-services/waste-management/waste-statistics-and-overall-recycling</a></p>
 
-<p>Towards Zero Waste. (n.d.). Food Waste. <a href="https://www.towardszerowaste.gov.sg/foodwaste/">https://www.towardszerowaste.gov.sg/foodwaste/</a></p>
+<p>O'Neill, A. (2023, February 2).Gross domestic product (GDP) per capita in selected global regions at current prices in 2021. <a href="https://www.statista.com/statistics/256413/gross-domestic-product-per-capita-in-selected-global-regions/">https://www.statista.com/statistics/256413/gross-domestic-product-per-capita-in-selected-global-regions/</a></p>
 
 <p>Selassie, A. A., & Hakobyan, S. (2021, April 15). Six charts show the challenges faced by Sub-Saharan Africa. International Monetary Fund (IMF). <a href="https://www.imf.org/en/News/Articles/2021/04/12/na041521-six-charts-show-the-challenges-faced-by-sub-saharan-africa">https://www.imf.org/en/News/Articles/2021/04/12/</a></p>
 
-<p>O'Neill, A. (2023, February 2).Gross domestic product (GDP) per capita in selected global regions at current prices in 2021. <a href="https://www.statista.com/statistics/256413/gross-domestic-product-per-capita-in-selected-global-regions/">https://www.statista.com/statistics/256413/gross-domestic-product-per-capita-in-selected-global-regions/</a></p>
+<p>Towards Zero Waste. (n.d.). Food Waste. <a href="https://www.towardszerowaste.gov.sg/foodwaste/">https://www.towardszerowaste.gov.sg/foodwaste/</a></p>
+
+<p>United Nation Environment Programme. (2022, September 26). Why the global fight to tackle food waste has only just begun. <a href="https://www.unep.org/news-and-stories/story/why-global-fight-tackle-food-waste-has-only-just-begun" target="_blank">https://www.unep.org/news-and-stories/story/why-global-fight-tackle-food-waste-has-only-just-begun</a></p>
+
+<p>Zheng, Z. (2019, May 16). Food waste worsens climate change more than plastics: Zero waste Scotland report. <a href="https://mothership.sg/2019/05/food-waste-worsens-climate-change-more- than-plastics-zero-waste-scotland-report/" target="_blank">https://mothership.sg/2019/05/food-waste-worsens-climate-change-more- than-plastics-zero-waste-scotland-report/</a>
+</p>
+
+<p>Ministry of Sustainability and the Environment (MSE). (2020, January 14). Saving Semakau — One island’s role in managing Singapore’s waste. <a href="https://www.mse.gov.sg/resource-room/category/2020-01-14-newsletter-saving-semakau-one-island-role-in-manaing-singapore-waste/" target="_blank">https://www.mse.gov.sg/resource-room/category/2020-01-14-newsletter-saving-semakau-one-island-role-in-manaing-singapore-waste/</a></p>
+
+      </div>
+    </div>
+  </div>
+  </div> <!-- End of References -->
+  
+  <div class="accordion" id="data_sources">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingTwo">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="f" aria-controls="collapseTwo">
+<h4>Data Sources</h4>
+</button>
+    </h2>
+    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+    
+<p>Arvidsson, J. (n.d.). Food Waste [Data set]. Kaggle. <a href="https://www.kaggle.com/datasets/joebeachcapital/food-waste" target="_blank">https://www.kaggle.com/datasets/joebeachcapital/food-waste</a></p>
+
+<p>National Environment Agency (NEA). (n.d.). <a href="https://www.nea.gov.sg/docs/default-source/our-services/waste-management/wastestats-2003-20164197a3fd04d34770bafba09393d0fdf0.pdf<" target="_blank">https://www.nea.gov.sg/docs/default-source/our-services/waste-management/wastestats-2003-20164197a3fd04d34770bafba09393d0fdf0.pdf</a></p>
+
+<p>National Environment Agency (NEA). (n.d.). <a href="https://www.nea.gov.sg/docs/default-source/default-document-library/waste-and-recycling-statistics-2017-to-2021.pdf" target="_blank">https://www.nea.gov.sg/docs/default-source/default-document-library/waste-and-recycling-statistics-2017-to-2021.pdf</a></p>
+
+<p>National Environment Agency (NEA). (n.d.). <a href="https://www.nea.gov.sg/our-services/waste-management/waste-statistics-and-overall-recycling" target="_blank">https://www.nea.gov.sg/our-services/waste-management/waste-statistics-and-overall-recycling</a></p>
       </div>
     </div>
   </div>
   </div>
+  
 </section> <!-- End of References Section -->
 </section>
 </div>

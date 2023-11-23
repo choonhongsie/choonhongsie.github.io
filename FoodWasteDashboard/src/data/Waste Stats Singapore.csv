@@ -1,0 +1,16 @@
+Waste Type,Total Generated ('000 tonnes),Total Recycled ('000 tonnes),Recycling Rate,Total Disposed ('000 tonnes)
+Ferrous metal,"1,338","1,331",99%,7
+Paper/Cardboard,"1,064",394,37%,671
+Construction & Demolition,"1,424","1,419",99%,5
+Plastics,"1,001",57,6%,944
+Food,813,146,18%,667
+Horticultural,221,188,85%,32
+Wood,419,298,71%,121
+Ash & sludge,241,27,11%,213
+Textile/Leather,254,5,2%,249
+Used slag,169,166,99%,2
+Non-ferrous metal,92,91,98%,2
+Glass,73,11,14%,63
+Scrap tyres,26,25,95%,1
+"Others (stones, ceramics, etc.)",249,30,N.A.,219
+Overall,"7,385","4,188",57%,"3,197"
