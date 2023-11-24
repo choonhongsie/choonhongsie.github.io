@@ -139,3 +139,9 @@ section#introduction, section#Singapore {
   padding-left: 30px; 
   text-indent: -30px; 
 }
+
+@media (min-width: 768px) {
+  .padding_more_768 {
+  padding: 0 100px;
+}
+}

@@ -19,10 +19,10 @@ format:
 <section id="introduction" class="container" width="100%">
     
 <h4 class="text-center fw-bold my-4">Introduction</h4>
-<p>Food waste is a major global problem (UNEP, 2022). According to the United Nations Environment Programme (UNEP) (2022), it is estimated that <strong>1/3 or 30%</strong> of the world’s food produced for human consumption was lost or wasted on a global scale, totaling around <strong>1.3 billion tons annually</strong> (FAO, 2011; UNEP, 2021; UNEP, 2022). Additionally, food waste contributes to global greenhouse gas emissions, estimated at <strong>8 - 10%</strong>, intensifying climate change (UNEP, 2021).</p>
+<p class="padding_more_768">Food waste is a major global problem (UNEP, 2022). According to the United Nations Environment Programme (UNEP) (2022), it is estimated that <strong>1/3 or 30%</strong> of the world’s food produced for human consumption was lost or wasted on a global scale, totaling around <strong>1.3 billion tons annually</strong> (FAO, 2011; UNEP, 2021; UNEP, 2022). Additionally, food waste contributes to global greenhouse gas emissions, estimated at <strong>8 - 10%</strong>, intensifying climate change (UNEP, 2021).</p>
 
 <h4 id="whatIsFW" class="text-center fw-bold my-4">What is <div class="foodwasteword">Food Waste?<div></h4>
-<p>According to the United Nations' Food and Agricultural Organisation (FAO),"food waste" refers to the discarding or non-food use of products that are safe and nutritious for human consumption.</p>
+<p class="padding_more_768">According to the United Nations' Food and Agricultural Organisation (FAO),"food waste" refers to the discarding or non-food use of products that are safe and nutritious for human consumption.</p>
 ```
 ```{r import libraries, echo=FALSE, warning=FALSE, message=FALSE}
 library(tidyverse)
@@ -278,7 +278,7 @@ hc_mapNavigation(enabled = TRUE)
 ```
 
 ```{=html}
-<p>At first glance, we can see that China, followed by India, has generated the most household food waste. This is not surprising as they are the most populous countries in the world.</p>
+<p class="padding_more_768">At first glance, we can see that China, followed by India, has generated the most household food waste. This is not surprising as they are the most populous countries in the world.</p>
 <h4 id="closerLook" class="text-center fw-bold my-4">Let's take a closer look...</h4>
 <section class="container" style="width:100%;">
 <section class="row">
@@ -416,7 +416,7 @@ hchart(total_FW_region, type = "bar", hcaes(x = region, y = total_combined_estim
 </section>
 
 <section id="singapore" class="container my-5" width="100%">
-<p>Food waste is a serious problem in Singapore, as it affects food security and puts pressure on resources. This is especially concerning given that Singapore imports over 90% of its food supply and is a land-scarce country (Towards Zero Waste, n.d.).</p>
+<p class="padding_more_768">In 2019, Singapore produced approximately 744 million kilograms of food waste, which translates to the consumption of <strong>2 bowls of rice per person daily</strong> or the volume of about <strong>51,000</strong> double decker buses (Towards Zero Waste, n.d.). This alarming level of food waste poses a significant challenge in Singapore, impacting food security and straining vital resources. This issue is particularly critical considering Singapore's heavy reliance on importing more than 90% of its food and its limited land availability (Towards Zero Waste, n.d.).</p>
 ```
 ```{r Spline Line Chart , echo=FALSE, warning=FALSE, message=FALSE}
 # Spline Line Chart
@@ -446,7 +446,7 @@ FWD_sg %>%
 ```
 
 ```{=html}
-<p>Singapore generated <strong>763,000 tonnes</strong> of food waste in 2022 and this accounted for <strong>11%</strong> of total waste (NEA, n.d.). This amount has increased steadily over the years, and it is expected to continue to grow as the population and economy expand.</p>
+<p class="padding_more_768">Singapore generated <strong>763,000 tonnes</strong> of food waste in 2022 and this accounted for <strong>11%</strong> of total waste (NEA, n.d.). This amount has increased steadily over the years, and it is expected to continue to grow as the population and economy expand.</p>
 ```
 ```{r WasteStats_SG, echo=FALSE, warning=FALSE, message=FALSE}
 # Create Pie Chart using highcharter
@@ -477,7 +477,7 @@ highchart() %>%
 ```
 
 ```{=html}
-<p>Food waste ranks among the <strong>top 3 type of waste</strong> generated in Singapore, trailing behind paper/cardboard and plastic waste. Both Ferrous metal and paper/cardboard have a recycling rate of 99%. Go to the <a href="./dashboard.html" target="_blank">Dashboard </a><a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Navigate to Dataset 3 (Waste Type) --> Click 'Data' tab">to find out more.</a> The "Others" types is the combimnation waste type that accounts for <strong>less than 6% of the total waste.</strong></p>
+<p class="padding_more_768">Food waste ranks among the <strong>top 3 type of waste</strong> generated in Singapore, trailing behind paper/cardboard and plastic waste. Both Ferrous metal and paper/cardboard have a recycling rate of 99%. Go to the <a href="./dashboard.html" target="_blank">Dashboard </a><a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Navigate to Dataset 3 (Waste Type) --> Click 'Data' tab">to find out more.</a> The "Others" types is the combimnation waste type that accounts for <strong>less than 6% of the total waste.</strong></p>
 ```
 ```{r FWD_sg, echo=FALSE, warning=FALSE, message=FALSE}
 FWD_sg_by_type <- FWD_UNEP %>% filter(country == "Singapore") %>% select(household_estimate_tpy, retail_estimate_tpy, food_service_estimate_tpy) 
@@ -627,6 +627,11 @@ Donate excess edibles to food bank like Food Bank Singapore, Willing Hearts, Fro
     </section>
   </section>
 </section>
+
+<h4 id = "tips" id="conclusion" class="text-center fw-bold my-4">Conclusion</h4>
+<p class="padding_more_768">Food waste stands as a pressing global concern, with approximately one-third of the world's produced food for human consumption going to waste. The issue spans from households to commercial establishments, contributing significantly to greenhouse gas emissions and exacerbating climate change. Regional disparities reveal both socioeconomic and developmental influences, emphasizing the need for immediate action on both individual and systemic levels.</p>
+
+<p class="padding_more_768">Singapore, despite producing relatively less food waste compared to its regional counterparts, faces critical challenges due to its reliance on food imports and limited space. The impending waste management crisis and environmental repercussions underscore the urgency in addressing food waste. Practical solutions, from mindful meal planning to donating excess food, offer tangible steps toward curbing waste. However, comprehensive efforts involving behavioral shifts, policy interventions, and community engagement are essential to cultivate a sustainable culture around food consumption and waste reduction.</p>
 
 <section id="references" class="container mt-5" style="width:100%;">
 <div class="accordion" id="accordionExample">

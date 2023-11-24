@@ -36,6 +36,8 @@ website:
           text: Food Waste in Singapore
         - href: index.qmd#tips
           text: Tips to Reduce Food Waset in Singapore
+        - href: index.qmd#conclusion
+          text: Conclusion  
         - href: index.qmd#references
           text: References
         - href: index.qmd#data_sources
