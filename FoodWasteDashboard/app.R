@@ -632,8 +632,7 @@ server <- function(input, output, session) {
             hc_colorAxis(minColor = randomColor(1),maxColor = randomColor(1)) %>% 
             hc_title(text = "Total Generated Waste by Type in Singapore") %>%
             hc_legend(enabled = FALSE) %>%
-            hc_subtitle(text = "Total Waste Type (Tonnes/Year)") %>% 
-            hc_exporting(enabled = TRUE, filename = "Dataset 3 (Waste Type) - Treemap")
+            hc_subtitle(text = "Total Waste Type (Tonnes/Year)")
     })
 }
 

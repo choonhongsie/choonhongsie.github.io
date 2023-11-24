@@ -19,8 +19,7 @@ format:
 <section id="introduction" class="container" width="100%">
     
 <h4 class="text-center fw-bold my-4">Introduction</h4>
-<p>Food waste is a major global problem (UNEP, 2022). According to the United Nations (FAO, n.d.), it is estimated that <strong>1/3 or 30%</strong> of the world’s food produced for human consumption was lost or wasted on a global scale, totaling around <strong>1.3 billion tons annually</strong> (FAO, 2011).
-</p>
+<p>Food waste is a major global problem (UNEP, 2022). According to the United Nations Environment Programme (UNEP) (2022), it is estimated that <strong>1/3 or 30%</strong> of the world’s food produced for human consumption was lost or wasted on a global scale, totaling around <strong>1.3 billion tons annually</strong> (FAO, 2011; UNEP, 2021; UNEP, 2022). Additionally, food waste contributes to global greenhouse gas emissions, estimated at <strong>8 - 10%</strong>, intensifying climate change (UNEP, 2021).</p>
 
 <h4 id="whatIsFW" class="text-center fw-bold my-4">What is <div class="foodwasteword">Food Waste?<div></h4>
 <p>According to the United Nations' Food and Agricultural Organisation (FAO),"food waste" refers to the discarding or non-food use of products that are safe and nutritious for human consumption.</p>
@@ -559,8 +558,8 @@ highchart() %>%
 <h4 class="text-center fw-bold my-4">How does Singapore compared Countries in South-Eastern Asia?</h4>
 
 
-<section class="d-flex col-lg-auto">
-<section class="mx-3">
+<section class="text-center">
+<section class="my-3">
   <a href="./dashboard.html" target="_blank" class="btn btn-success rounded-2" role="button" data-bs-toggle="tooltip" data-delay='{"show": 100}' data-bs-placement="bottom" title="Click 'Visualisation' below Dataset 1 (UNEP) --> Select 'South-Eastern Asia' --> Scroll down to Horizontal Bar Chart
 ">Go to Food Waste Dashboard</a>
 </section>
@@ -579,11 +578,57 @@ highchart() %>%
 
 <h4 id = "tips" class="text-center fw-bold my-4">Tips to Reduce Food Waste in Singapore</h4>
 
-<img src="src/images/NM3217 Assignment 2.png" style="width:100%;object-fit:cover;"/>
+<section class="container" style="width:100%;">
+  <section class="row">
+    <section class="col-lg-6">
+```
+::: callout-tip
+## Tip 1 Plan Your Meals
+
+Plan your meal based on what you already have at home.
+:::
+
+::: callout-tip
+## Tip 2 Snap a Picture of your Fridge
+
+This helps you to shop responsibly and in smaller quantities.
+:::
+
+::: callout-tip
+## Tip 3 Store Items the Right Way
+
+Place fresh groceries behind products and move items that are nearer to expiry dates to the front.
+:::
+
+::: callout-tip
+## Tip 4 Stop Over Ordering
+
+Grocery shopping when you're hungry often leads to food wastage.
+:::
+
+::: callout-tip
+## Tip 5 Turn Leftovers into New Dishes
+
+Designate 1 dinner a week to finish up all your leftovers.
+:::
+
+::: callout-tip
+## Tip 6 Donate to Food Bank
+
+Donate excess edibles to food bank like Food Bank Singapore, Willing Hearts, From from the Heart, and more.
+:::
+
+```{=html}
+<figcaption class="figure-caption text-end my-1">Source: DBS, n.d.; Lee, 2023</figcaption>
+    </section>
+    <section class="col-lg-6">
+      <img src="src/images/NM3217 Assignment 2.png" style="width:100%;object-fit:cover;"/>
   <figcaption class="figure-caption text-end my-1">This infographic was created by Sie Choon Hong</figcaption>
+    </section>
+  </section>
+</section>
 
 <section id="references" class="container mt-5" style="width:100%;">
-  
 <div class="accordion" id="accordionExample">
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingOne">
@@ -593,17 +638,16 @@ highchart() %>%
     </h2>
     <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
       <div class="accordion-body hanging-indent">
-       <p>Food and Agriculture Organization. (n.d.). The State of Food and Agriculture - 2019. <a href="https://www.fao.org/state-of-food-agriculture/2019/en/" target="_blank">https://www.fao.org/state-of-food-agriculture/2019/en/</a></p>
+       
+<p>Development Bank of Singapore (DBS). (n.d.). 5 tips on reducing food waste. <a href="https://www.dbs.com/livemore/food/5-tips-on-reducing-food-waste.html" target="_blank">https://www.dbs.com/livemore/food/5-tips-on-reducing-food-waste.html</a></p>
 
-<p>Food and Agriculture Organization of the United Nations (FAO). 2011. Global food losses and food waste – Extent, causes and prevention. Rome. <a href="https://www.fao.org/3/mb060e/mb060e00.htm" target="_blank">https://www.fao.org/3/mb060e/mb060e00.htm</a></p>
+<p>Food and Agriculture Organization. (n.d.). The State of Food and Agriculture - 2019. <a href="https://www.fao.org/state-of-food-agriculture/2019/en/" target="_blank">https://www.fao.org/state-of-food-agriculture/2019/en/</a></p>
 
-<p>Lee, H.W. (2022, January 3).Food Wastage Statistics in Singapore. <a href="https://www.bestinsingapore.co/food-wastage-statistics-singapore/" target="_blank">https://www.bestinsingapore.co/food-wastage-statistics-singapore/</a></p>
+<p>Food and Agriculture Organization of the United Nations (FAO). (2011). Global food losses and food waste – Extent, causes and prevention. Rome. <a href="https://www.fao.org/3/mb060e/mb060e00.htm" target="_blank">https://www.fao.org/3/mb060e/mb060e00.htm</a></p>
 
-<p>Low, Y.J. (2019, August 6). Every Singaporean household throws away an average S$258 worth of food a year: Study. <a href="https://www.todayonline.com/singapore/every-singaporean-household-throws-away-average-s258-worth-food-year-study" target="_blank">https://www.todayonline.com/singapore/every-singaporean-household-throws-away-average-s258-worth-food-year-study</a></p>
+<p>Lee, B. (2023, May 25). Love Food, hate waste: 8 easy ways to reduce food waste in Singapore. <a href="https://thehoneycombers.com/singapore/stop-food-waste-singapore/" target="_blank">https://thehoneycombers.com/singapore/stop-food-waste-singapore/</a></p>
 
 <p>Ministry of Sustainability and the Environment (MSE). (2020, January 14). Saving Semakau — One island’s role in managing Singapore’s waste. <a href="https://www.mse.gov.sg/resource-room/category/2020-01-14-newsletter-saving-semakau-one-island-role-in-manaing-singapore-waste/" target="_blank">https://www.mse.gov.sg/resource-room/category/2020-01-14-newsletter-saving-semakau-one-island-role-in-manaing-singapore-waste/</a></p>
-
-<p>Miquelis, P. (2019, january 25). The Truth About Food Waste in Singapore (and beyond). <a href="https://greenisthenewblack.com/the-truth-about-food-waste-in-singapore-and-beyond/" target="_blank">https://greenisthenewblack.com/the-truth-about-food-waste-in-singapore-and-beyond/</a></p>
 
 <p>National Environment Agency (NEA). (n.d.). Waste Statistics and Overall Recycling
 .<a href="https://www.nea.gov.sg/our-services/waste-management/waste-statistics-and-overall-recycling" target="_blank">https://www.nea.gov.sg/our-services/waste-management/waste-statistics-and-overall-recycling</a></p>
@@ -614,7 +658,10 @@ highchart() %>%
 
 <p>Towards Zero Waste. (n.d.). Food Waste. <a href="https://www.towardszerowaste.gov.sg/foodwaste/">https://www.towardszerowaste.gov.sg/foodwaste/</a></p>
 
-<p>United Nation Environment Programme. (2022, September 26). Why the global fight to tackle food waste has only just begun. <a href="https://www.unep.org/news-and-stories/story/why-global-fight-tackle-food-waste-has-only-just-begun" target="_blank">https://www.unep.org/news-and-stories/story/why-global-fight-tackle-food-waste-has-only-just-begun</a></p>
+<p>United Nation Environment Programme (UNEP). (2021). UNEP Food Waste Index Report 2021.<a href="https://www.unep.org/resources/report/unep-food-waste-index-report-2021" target="_blank">https://www.unep.org/resources/report/unep-food-waste-index-report-2021</a>
+</p>
+
+<p>United Nation Environment Programme (UNEP). (2022, September 26). Why the global fight to tackle food waste has only just begun. <a href="https://www.unep.org/news-and-stories/story/why-global-fight-tackle-food-waste-has-only-just-begun" target="_blank">https://www.unep.org/news-and-stories/story/why-global-fight-tackle-food-waste-has-only-just-begun</a></p>
 
 <p>Zheng, Z. (2019, May 16). Food waste worsens climate change more than plastics: Zero waste Scotland report. <a href="https://mothership.sg/2019/05/food-waste-worsens-climate-change-more- than-plastics-zero-waste-scotland-report/" target="_blank">https://mothership.sg/2019/05/food-waste-worsens-climate-change-more- than-plastics-zero-waste-scotland-report/</a>
 </p>
