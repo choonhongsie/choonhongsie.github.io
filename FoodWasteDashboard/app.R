@@ -151,9 +151,9 @@ ui <- dashboardPage(
                     tabBox(id="t1", width = 12,
                            tabPanel("Dataset 1 (UNEP)",
                                     fluidRow(
-                                        box(style = "overflow: visible;", status = "success", tags$img(src="images/Food Waste Background image.jpg", width = 550, height = 300), "Image Source: ",
+                                        box(style = "overflow: scroll;", status = "success", tags$img(src="images/Food Waste Background image.jpg", width = 550, height = 300), "Image Source: ",
                                             tags$a("Freepik", href = "https://www.freepik.com/free-photo/close-up-hand-holding-wooden-board_14351726.htm#query=food%20waste&position=26&from_view=search&track=ais"), align= "right"),
-                                        box(style = "overflow: visible;", status = "success", title = "Dataset", "This dataset comes from ",
+                                        box(style = "overflow: scroll;", status = "success", title = "Dataset", "This dataset comes from ",
                                             tags$a("Kaggle (Orignal source from UNEP 2021 Food Waste)", href = "https://www.kaggle.com/datasets/joebeachcapital/food-waste/")),
                                         valueBox(ncol(FWD_UNEP_source), "Total Number of Columns", icon = icon("table-columns"), color = "green", width = 3),
                                         valueBox(nrow(FWD_UNEP_source), "Total Number of Rows", icon = icon("table-list"), color = "green", width = 3),
@@ -169,7 +169,11 @@ ui <- dashboardPage(
                     tabBox(id="t20", width = 12,
                            tabPanel("Region", value = "dataset1-region",
                                fluidRow(
-                                   box(value = "map", status = "success", title = "World Map", highchartOutput("mapChart"), width = 6),
+                                 #plotOutput("plottest1"), downloadButton(outputId = "down", label = "Download the plot"),
+                                   box(style = "overflow: scroll;", value = "map", status = "success", title = "World Map", highchartOutput("mapChart"), 
+                                       #downloadButton("downloadData", "Download"), 
+                                       #downloadButton("downloadPlot", "Download World Map"), 
+                                       width = 6),
                                    box(value = "dataset1_pie", status = "success", title = "Pie Chart", highchartOutput("dataset1_pie"), width = 6),
                                    infoBox("Household", textOutput("household_Total"), icon = icon("house"), color = "green", width = 3),
                                    infoBox("Retail", textOutput("retail_Total"), icon = icon("utensils"), color = "orange", width = 3),
@@ -194,7 +198,7 @@ ui <- dashboardPage(
                     tabBox(id="t3", width = 12,
                            tabPanel("Dataset 2 (Recycling Stats)",
                                     fluidRow(
-                                        box(status = "success", tags$img(src="images/Food Waste SG background Image.png", width = 600, height = 300), "Image Source: ",
+                                        box(style = "overflow: scroll;", status = "success", tags$img(src="images/Food Waste SG background Image.png", width = 600, height = 300), "Image Source: ",
                                             tags$a("NEA", href = "https://www.nea.gov.sg/our-services/waste-management/3r-programmes-and-resources/food-waste-management"), align= "right"),
                                         box(status = "success", title = "Dataset", "This dataset comes NEA: ",
                                             tags$a("2003 - 2017, ", href = "https://www.nea.gov.sg/docs/default-source/our-services/waste-management/wastestats-2003-20164197a3fd04d34770bafba09393d0fdf0.pdf"),
@@ -213,7 +217,7 @@ ui <- dashboardPage(
                     tabName = "vis2",
                     tabBox(id="t4", width = 12,
                            fluidRow(
-                               box(status = "success", tags$h3(tags$strong("Waste Statistics and Overall Recycling Table in Singapore")), width = 12),
+                               box(style = "overflow: scroll;", status = "success", tags$h3(tags$strong("Waste Statistics and Overall Recycling Table in Singapore")), width = 12),
                                box(value = "map", status = "success", title = "Line Chart", highchartOutput("line"), width = 6),
                                box(status = "success", title = "Area Chart", highchartOutput("area"), width = 6)
                            ) # end of FluidRow
@@ -299,7 +303,7 @@ server <- function(input, output, session) {
             hc_title(text = "Total Food Waste by Region ") %>%
             hc_subtitle(text = "Total Food Waste (Tonnes/Year)") %>% 
             hc_tooltip(pointFormat = "<b>{point.name}</b>: {point.y} tonnes/year") %>% 
-            hc_xAxis(title = "Food Waste Sector") %>%  
+            hc_xAxis(title = list(text = "Food Waste Sector"), labels = list(enabled = TRUE)) %>%  
             hc_yAxis(title = list(enabled = FALSE)) %>% 
             hc_plotOptions(column = list(colorByPoint = TRUE)) %>% 
             hc_colors(c("green", "orange", "blue"))
@@ -372,7 +376,8 @@ server <- function(input, output, session) {
             hc_colorAxis(minColor = "white", maxColor = "#d62023") %>%
             hc_legend(valueDecimals = 0, valueSuffix = "%") %>%
             hc_mapNavigation(enabled = TRUE) %>% 
-            hc_subtitle(text = "Total Food Waste (Tonnes/Year)")
+            hc_subtitle(text = "Total Food Waste (Tonnes/Year)") %>% 
+            hc_exporting(enabled = TRUE, filename = "Dataset 1 (UNEP) - World Map")
     })
     # Pie Chart
     output$dataset1_pie <- renderHighchart ({
@@ -393,7 +398,8 @@ server <- function(input, output, session) {
             ) %>% 
             hc_title(text = "Total Food Waste by Sector by Region") %>%
             hc_legend(enabled = TRUE) %>%
-            hc_subtitle(text = "Total Food Waste (Tonnes/Year)")
+            hc_subtitle(text = "Total Food Waste (Tonnes/Year)") %>% 
+            hc_exporting(enabled = TRUE, filename = "Dataset 1 (UNEP) - Pie Chart")
     })
     # Horizontal Bar Chart
     output$dataset1_sideBar <- renderHighchart ({
@@ -404,11 +410,11 @@ server <- function(input, output, session) {
             hc_subtitle(text = "Total Food Waste (Tonnes/Year)") %>% 
             hc_tooltip(pointFormat = "<b>{point.name}</b>: {point.y} tonnes/year") %>% 
             hc_xAxis(title = list(enabled = FALSE)) %>%  
-            hc_yAxis(title = list(enabled = FALSE)) 
+            hc_yAxis(title = list(enabled = FALSE)) %>% 
+            hc_exporting(enabled = TRUE, filename = "Dataset 1 (UNEP) - Horizontal Bar Chart")
     })
     
     output$dataset1_world_chart1 <- renderPlotly ({
-
     # Show how different categories of per-capita food waste compare in each region
     total_FW_region <- ggplot(total_FW_region, aes(y = reorder(region, total_combined_estimate_kpcpy), x = total_combined_estimate_kpcpy, fill = "Combined")) +
       geom_col(aes(x = total_household_estimate_kpcpy, fill = "Household",
@@ -432,7 +438,6 @@ server <- function(input, output, session) {
     ggplotly(total_FW_region,tooltip = "text") %>%
       config(displayModeBar = FALSE) %>%
     layout(legend = list(orientation = "h", x = -0.2, y = -0.2))
-    
     })
     
     output$dataset1_world_chart2 <- renderPlotly ({
@@ -488,6 +493,30 @@ server <- function(input, output, session) {
             config(displayModeBar = FALSE)%>%
             layout(aspectratio = list(x = 1, y = 1),legend = list(orientation = "h", x = -0.2, y = -0.2))
     })
+    
+    # data <- mtcars
+    # 
+    # output$downloadData <- downloadHandler(
+    #   filename = function() {
+    #     paste("Dataset1 (UNEP) - World Map", ".png", sep="")
+    #   },
+    #   content = function(file) {
+    #     write.csv(data, file)
+    #   }
+    # )
+    # output$plottest1 <- renderPlot({
+    #   plot(x=x(), y=y())
+    # })
+    # output$down <- downloadHandler(
+    #   filename =  function() {
+    #     paste("iris", "png", sep=".")
+    #   },
+    #   content = function(file) {
+    #     png(file) 
+    #     plot(iris[,1], iris[,1]) 
+    #     dev.off()  
+    #   } 
+    # )
     #-------------------------------------------------------------------------------------------------------------    
     # FWD_SG
     # Structure 
@@ -505,35 +534,33 @@ server <- function(input, output, session) {
     output$FWD_SG_colNamesText <- renderPrint({
         cat(paste(FWD_SG_column_names(), collapse = "<br>"), "\n")
     })
+    # To use in Line and Area Chart
+    FWD_SG_pivot_longer <- reactive({
+      FWD_SG %>% pivot_longer(cols = disposed_tonnes:disposed_tonnes:recycled_tonnes:generated_tonnes,
+                              names_to = "Sector",
+                              values_to = "Tonnes") %>% 
+        mutate(Sector = case_when(
+          Sector == "disposed_tonnes" ~ "Disposed",
+          Sector == "generated_tonnes" ~ "Generated",
+          Sector == "recycled_tonnes" ~ "Recycled",
+          TRUE ~ as.character(Sector)
+        ))
+    })
     # Line Chart
     output$line <- renderHighchart({
-        FWD_SG <- FWD_SG %>% pivot_longer(cols = disposed_tonnes:disposed_tonnes:recycled_tonnes:generated_tonnes,
-                                          names_to = "Sector",
-                                          values_to = "Tonnes") %>% 
-            mutate(Sector = case_when(
-                Sector == "disposed_tonnes" ~ "Disposed",
-                Sector == "generated_tonnes" ~ "Generated",
-                Sector == "recycled_tonnes" ~ "Recycled",
-                TRUE ~ as.character(Sector)
-            ))
-        
-        FWD_SG %>% filter(year >= input$sliderInput1[1] & year <= input$sliderInput1[2]) %>%
-            hchart('spline', hcaes(x = 'year', y = 'Tonnes', group = "Sector")) 
+      FWD_SG <- FWD_SG_pivot_longer()
+
+      FWD_SG %>% filter(year >= input$sliderInput1[1] & year <= input$sliderInput1[2]) %>%
+        hchart('spline', hcaes(x = 'year', y = 'Tonnes', group = "Sector")) %>% 
+        hc_exporting(enabled = TRUE, filename = "Dataset 2 (Recycling Stats) - Line Chart") 
     })
     # Area Chart
     output$area <- renderHighchart({
-        FWD_SG <- FWD_SG %>% pivot_longer(cols = disposed_tonnes:disposed_tonnes:recycled_tonnes:generated_tonnes,
-                                          names_to = "Sector",
-                                          values_to = "Tonnes") %>% 
-            mutate(Sector = case_when(
-                Sector == "disposed_tonnes" ~ "Disposed",
-                Sector == "generated_tonnes" ~ "Generated",
-                Sector == "recycled_tonnes" ~ "Recycled",
-                TRUE ~ as.character(Sector)
-            ))
+      FWD_SG <- FWD_SG_pivot_longer()
         
-        FWD_SG %>% filter(year >= input$sliderInput1[1] & year <= input$sliderInput1[2]) %>%
-            hchart('areaspline', hcaes(x = 'year', y = 'Tonnes', group = "Sector"))
+      FWD_SG %>% filter(year >= input$sliderInput1[1] & year <= input$sliderInput1[2]) %>%
+        hchart('areaspline', hcaes(x = 'year', y = 'Tonnes', group = "Sector")) %>% 
+        hc_exporting(enabled = TRUE, filename = "Dataset 2 (Recycling Stats) - Area Chart") 
     })
     #-------------------------------------------------------------------------------------------------------------
     # WASTE_SG 
@@ -580,7 +607,8 @@ server <- function(input, output, session) {
             ) %>% 
             hc_title(text = "Total Generated Waste by Type in Singapore") %>%
             hc_legend(enabled = TRUE) %>%
-            hc_subtitle(text = "Total Waste Type (Tonnes/Year)") 
+            hc_subtitle(text = "Total Waste Type (Tonnes/Year)") %>% 
+            hc_exporting(enabled = TRUE, filename = "Dataset 3 (Waste Type) - Donut Chart") 
     })
     #  Treemap Chart by Waste Type
     output$treemap <- renderHighchart({
@@ -604,7 +632,8 @@ server <- function(input, output, session) {
             hc_colorAxis(minColor = randomColor(1),maxColor = randomColor(1)) %>% 
             hc_title(text = "Total Generated Waste by Type in Singapore") %>%
             hc_legend(enabled = FALSE) %>%
-            hc_subtitle(text = "Total Waste Type (Tonnes/Year)") 
+            hc_subtitle(text = "Total Waste Type (Tonnes/Year)") %>% 
+            hc_exporting(enabled = TRUE, filename = "Dataset 3 (Waste Type) - Treemap")
     })
 }
 

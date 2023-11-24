@@ -547,11 +547,13 @@ highchart() %>%
 
 ```{=html}
 <script>
-    $(document).ready(function(){
-  $('a[data-bs-toggle="tooltip"]').tooltip().click( function(e) {
-        e.preventDefault(); 
+  $(document).ready(function(){
+    $('a[data-bs-toggle="tooltip"]').tooltip();
+    $('a[data-bs-toggle="tooltip"]').click(function(e) {
+      e.preventDefault();
+      window.location.href = './dashboard.html'; // Redirect to dashboard.html
+    });
   });
-});
 </script>
 
 <h4 class="text-center fw-bold my-4">How does Singapore compared Countries in South-Eastern Asia?</h4>
@@ -590,7 +592,7 @@ highchart() %>%
       </button>
     </h2>
     <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
+      <div class="accordion-body hanging-indent">
        <p>Food and Agriculture Organization. (n.d.). The State of Food and Agriculture - 2019. <a href="https://www.fao.org/state-of-food-agriculture/2019/en/" target="_blank">https://www.fao.org/state-of-food-agriculture/2019/en/</a></p>
 
 <p>Food and Agriculture Organization of the United Nations (FAO). 2011. Global food losses and food waste – Extent, causes and prevention. Rome. <a href="https://www.fao.org/3/mb060e/mb060e00.htm" target="_blank">https://www.fao.org/3/mb060e/mb060e00.htm</a></p>
@@ -598,6 +600,8 @@ highchart() %>%
 <p>Lee, H.W. (2022, January 3).Food Wastage Statistics in Singapore. <a href="https://www.bestinsingapore.co/food-wastage-statistics-singapore/" target="_blank">https://www.bestinsingapore.co/food-wastage-statistics-singapore/</a></p>
 
 <p>Low, Y.J. (2019, August 6). Every Singaporean household throws away an average S$258 worth of food a year: Study. <a href="https://www.todayonline.com/singapore/every-singaporean-household-throws-away-average-s258-worth-food-year-study" target="_blank">https://www.todayonline.com/singapore/every-singaporean-household-throws-away-average-s258-worth-food-year-study</a></p>
+
+<p>Ministry of Sustainability and the Environment (MSE). (2020, January 14). Saving Semakau — One island’s role in managing Singapore’s waste. <a href="https://www.mse.gov.sg/resource-room/category/2020-01-14-newsletter-saving-semakau-one-island-role-in-manaing-singapore-waste/" target="_blank">https://www.mse.gov.sg/resource-room/category/2020-01-14-newsletter-saving-semakau-one-island-role-in-manaing-singapore-waste/</a></p>
 
 <p>Miquelis, P. (2019, january 25). The Truth About Food Waste in Singapore (and beyond). <a href="https://greenisthenewblack.com/the-truth-about-food-waste-in-singapore-and-beyond/" target="_blank">https://greenisthenewblack.com/the-truth-about-food-waste-in-singapore-and-beyond/</a></p>
 
@@ -614,9 +618,6 @@ highchart() %>%
 
 <p>Zheng, Z. (2019, May 16). Food waste worsens climate change more than plastics: Zero waste Scotland report. <a href="https://mothership.sg/2019/05/food-waste-worsens-climate-change-more- than-plastics-zero-waste-scotland-report/" target="_blank">https://mothership.sg/2019/05/food-waste-worsens-climate-change-more- than-plastics-zero-waste-scotland-report/</a>
 </p>
-
-<p>Ministry of Sustainability and the Environment (MSE). (2020, January 14). Saving Semakau — One island’s role in managing Singapore’s waste. <a href="https://www.mse.gov.sg/resource-room/category/2020-01-14-newsletter-saving-semakau-one-island-role-in-manaing-singapore-waste/" target="_blank">https://www.mse.gov.sg/resource-room/category/2020-01-14-newsletter-saving-semakau-one-island-role-in-manaing-singapore-waste/</a></p>
-
       </div>
     </div>
   </div>
@@ -630,15 +631,14 @@ highchart() %>%
 </button>
     </h2>
     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-    
+      <div class="accordion-body hanging-indent">
 <p>Arvidsson, J. (n.d.). Food Waste [Data set]. Kaggle. <a href="https://www.kaggle.com/datasets/joebeachcapital/food-waste" target="_blank">https://www.kaggle.com/datasets/joebeachcapital/food-waste</a></p>
 
-<p>National Environment Agency (NEA). (n.d.). <a href="https://www.nea.gov.sg/docs/default-source/our-services/waste-management/wastestats-2003-20164197a3fd04d34770bafba09393d0fdf0.pdf<" target="_blank">https://www.nea.gov.sg/docs/default-source/our-services/waste-management/wastestats-2003-20164197a3fd04d34770bafba09393d0fdf0.pdf</a></p>
+<p>National Environment Agency (NEA). (n.d.). Waste Statistics and Recycling Rate from 2003 to 2016 [Data set]. <a href="https://www.nea.gov.sg/docs/default-source/our-services/waste-management/wastestats-2003-20164197a3fd04d34770bafba09393d0fdf0.pdf" target="_blank">https://www.nea.gov.sg/docs/default-source/our-services/waste-management/wastestats-2003-20164197a3fd04d34770bafba09393d0fdf0.pdf</a></p>
 
-<p>National Environment Agency (NEA). (n.d.). <a href="https://www.nea.gov.sg/docs/default-source/default-document-library/waste-and-recycling-statistics-2017-to-2021.pdf" target="_blank">https://www.nea.gov.sg/docs/default-source/default-document-library/waste-and-recycling-statistics-2017-to-2021.pdf</a></p>
+<p>National Environment Agency (NEA). (n.d.). Waste Statistics and Recycling Rate from 2017 to 2021 [Data set]. <a href="https://www.nea.gov.sg/docs/default-source/default-document-library/waste-and-recycling-statistics-2017-to-2021.pdf" target="_blank">https://www.nea.gov.sg/docs/default-source/default-document-library/waste-and-recycling-statistics-2017-to-2021.pdf</a></p>
 
-<p>National Environment Agency (NEA). (n.d.). <a href="https://www.nea.gov.sg/our-services/waste-management/waste-statistics-and-overall-recycling" target="_blank">https://www.nea.gov.sg/our-services/waste-management/waste-statistics-and-overall-recycling</a></p>
+<p>National Environment Agency (NEA). (n.d.). Waste Statistics and Recycling Rate for 2022 [Data set]. <a href="https://www.nea.gov.sg/our-services/waste-management/waste-statistics-and-overall-recycling" target="_blank">https://www.nea.gov.sg/our-services/waste-management/waste-statistics-and-overall-recycling</a></p>
       </div>
     </div>
   </div>
