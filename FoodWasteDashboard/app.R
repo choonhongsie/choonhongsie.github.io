@@ -217,7 +217,7 @@ ui <- dashboardPage(
                     tabName = "vis2",
                     tabBox(id="t4", width = 12,
                            fluidRow(
-                               box(style = "overflow: scroll;", status = "success", tags$h3(tags$strong("Waste Statistics and Overall Recycling Table in Singapore")), width = 12),
+                               box(status = "success", tags$h3(tags$strong("Waste Statistics and Overall Recycling Table in Singapore")), width = 12),
                                box(value = "map", status = "success", title = "Line Chart", highchartOutput("line"), width = 6),
                                box(status = "success", title = "Area Chart", highchartOutput("area"), width = 6)
                            ) # end of FluidRow
@@ -231,7 +231,7 @@ ui <- dashboardPage(
                            tabPanel("Dataset 3 (Waste Type)",
                                     # content in About
                                     fluidRow(
-                                        box(status = "success", tags$img(src="images/Food Waste SG background Image.png", width = 600, height = 300), "Image Source: ",
+                                        box(style = "overflow: scroll;", status = "success", tags$img(src="images/Food Waste SG background Image.png", width = 600, height = 300), "Image Source: ",
                                             tags$a("NEA", href = "https://www.nea.gov.sg/our-services/waste-management/3r-programmes-and-resources/food-waste-management"), align= "right"),
                                         box(status = "success", title = "Dataset", "This dataset comes NEA: ",
                                             tags$a("2022", href = "https://www.nea.gov.sg/our-services/waste-management/waste-statistics-and-overall-recycling")),

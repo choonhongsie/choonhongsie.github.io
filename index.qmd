@@ -628,7 +628,7 @@ Donate excess edibles to food bank like Food Bank Singapore, Willing Hearts, Fro
   </section>
 </section>
 
-<h4 id = "tips" id="conclusion" class="text-center fw-bold my-4">Conclusion</h4>
+<h4 id="conclusion" class="text-center fw-bold my-4">Conclusion</h4>
 <p class="padding_more_768">Food waste stands as a pressing global concern, with approximately one-third of the world's produced food for human consumption going to waste. The issue spans from households to commercial establishments, contributing significantly to greenhouse gas emissions and exacerbating climate change. Regional disparities reveal both socioeconomic and developmental influences, emphasizing the need for immediate action on both individual and systemic levels.</p>
 
 <p class="padding_more_768">Singapore, despite producing relatively less food waste compared to its regional counterparts, faces critical challenges due to its reliance on food imports and limited space. The impending waste management crisis and environmental repercussions underscore the urgency in addressing food waste. Practical solutions, from mindful meal planning to donating excess food, offer tangible steps toward curbing waste. However, comprehensive efforts involving behavioral shifts, policy interventions, and community engagement are essential to cultivate a sustainable culture around food consumption and waste reduction.</p>
