@@ -19,7 +19,7 @@ format:
 <section id="introduction" class="container" width="100%">
     
 <h4 class="text-center fw-bold my-4">Introduction</h4>
-<p class="padding_more_768">Food waste is a major global problem (UNEP, 2022). According to the United Nations Environment Programme (UNEP) (2022), it is estimated that <strong>1/3 or 30%</strong> of the world’s food produced for human consumption was lost or wasted on a global scale, totaling around <strong>1.3 billion tons annually</strong> (FAO, 2011; UNEP, 2021; UNEP, 2022). Additionally, food waste contributes to global greenhouse gas emissions, estimated at <strong>8 - 10%</strong>, intensifying climate change (UNEP, 2021).</p>
+<p class="padding_more_768">Food waste is a major global problem (UNEP, 2022). According to the United Nations Environment Programme (UNEP) (2022), it is estimated that <strong>1/3 or 30%</strong> of the world’s food produced for human consumption was lost or wasted on a global scale, totaling around <strong>1.3 billion tons annually</strong> (FAO, 2011; UNEP, 2021; UNEP, 2022). Additionally, food waste contributes to global greenhouse gas emissions, estimated at <strong>8 - 10%</strong>, intensifying climate change (UNEP, 2021).</p> 
 
 <h4 id="whatIsFW" class="text-center fw-bold my-4">What is <div class="foodwasteword">Food Waste?<div></h4>
 <p class="padding_more_768">According to the United Nations' Food and Agricultural Organisation (FAO),"food waste" refers to the discarding or non-food use of products that are safe and nutritious for human consumption.</p>
